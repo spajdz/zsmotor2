@@ -42,9 +42,8 @@
 				<tr>
 					<th class="numeric" class="hidden-xs">Imagen</th>
 					<th class="numeric">Nombre</th>
-					<th class="numeric">Código</th>
+					<th class="numeric">SKU</th>
 					<th class="numeric">Precio</th>
-					<th class="numeric">Talla</th>
 					<th class="numeric">Cantidad</th>
 					<th class="numeric">Subtotal</th>
 				</tr>
@@ -54,22 +53,20 @@
 				<tr class="js-contenedor-producto">
 					<td data-title="Imagen:" class="hidden-xs">
 						<?= $this->Html->link(
-							$this->Html->image($this->Hookipa->imagen($detalle['Producto']['codigo']), array('class' => 'img-responsive img-carro')),
-							array('action' => 'view', $detalle['Producto']['codigo']),
+							$this->Html->image($this->App->imagen($detalle['Producto']['sku']), array('class' => 'img-responsive img-carro')),
+							array('action' => 'view', $detalle['Producto']['sku']),
 							array('escape' => false)
 						); ?>
 					</td>
 					<td data-title="Nombre:">
 						<?= $this->Html->link(
-							$detalle['Producto']['articulo'],
-							array('controller' => 'productos', 'action' => 'view', $detalle['Producto']['codigo'])
+							$detalle['Producto']['nombre'],
+							array('controller' => 'productos', 'action' => 'view', $detalle['Producto']['sku'])
 						); ?>
 					</td>
-					<td data-title="Código:" class="isbn"><?= $detalle['Producto']['codigo']; ?></td>
+					<td data-title="Código:" class="isbn"><?= $detalle['Producto']['sku']; ?></td>
 					<td data-title="Precio:" class="precio">$ <?= number_format($detalle['precio_unitario'], 0, null, '.'); ?></td>
-					<td data-title="Talla:">
-						<?= h($detalle['Producto']['talla']); ?>
-					</td>
+					
 					<td data-title="Cantidad:"><?= $detalle['cantidad']; ?></td>
 					<td data-title="Subtotal:" class="precio js-producto-subtotal">$ <?= number_format(($detalle['precio_unitario'] * $detalle['cantidad']), 0, null, '.'); ?></td>
 				</tr>

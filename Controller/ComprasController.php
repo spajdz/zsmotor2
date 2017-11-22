@@ -2,8 +2,8 @@
 App::uses('AppController', 'Controller');
 class ComprasController extends AppController
 {
-	// public $commerceId = 597020000541;
-	public $commerceId = 597032470963;
+	public $commerceId = 597020000541;
+	// public $commerceId = 597032470963;
 	public function resumen()
 	{
 		/**
@@ -62,8 +62,7 @@ class ComprasController extends AppController
 		$observacion_retiro_tienda = $this->Session->read('Flujo.Carro.observacion_retiro_tienda');
 		$compra	= $this->Compra->registrarCarro($productos, $direccion_id, $carro['Peso'], false, false,$retiro_tienda, $tienda_retiro,$observacion_retiro_tienda );
 		$this->Session->write('Flujo.Carro.compra_id', $compra['Compra']['id']);
-		pr('test');
-		prx($compra);
+		
 		/**
 		 * Si existe error al guardar la compra, devuelve al usuario a la pagina de dirección
 		 * para reintentar la operacion
@@ -176,14 +175,14 @@ class ComprasController extends AppController
 							'tbk_monto'						=> $estadoTransaccion['tbk_monto'],
 							'tbk_codigo_autorizacion'		=> $estadoTransaccion['tbk_codigo_autorizacion'],
 							'tbk_final_numero_tarjeta'		=> $estadoTransaccion['tbk_final_numero_tarjeta'],
-							'tbk_fecha_transaccion_ws'		=> $estadoTransaccion['tbk_fecha_transaccion'],
-							'tbk_id_transaccion_ws'			=> $estadoTransaccion['token_ws'],
+							'tbk_fecha_transaccion'		=> $estadoTransaccion['tbk_fecha_transaccion'],
+							'tbk_id_transaccion'			=> $estadoTransaccion['token_ws'],
 							'tbk_tipo_pago'					=> $estadoTransaccion['tbk_tipo_pago'],
 							'tbk_numero_cuotas'				=> $estadoTransaccion['tbk_numero_cuotas'],
 							'tbk_vci'						=> $estadoTransaccion['tbk_vci'],
 						);
 
-							$this->Compra->set($data);
+						$this->Compra->set($data);
 						if ( ! $this->Compra->validates() || ! $this->Compra->save($data) )
 						{
 							prx( $this->Compra->getDataSource()->getLog(false, false));
@@ -192,7 +191,11 @@ class ComprasController extends AppController
 							$this->redirect(array('controller' => 'compras', 'action' => 'fracaso'));
 						}
 						
-						$compra			= $this->Compra->findById($id);
+						$compra			= $this->Compra->find('first',array(
+							'conditions' => array(
+								'Compra.id' => $id
+							)
+						));
 						if (  $compra['Compra']['total'] != $estadoTransaccion['tbk_monto'] )
 						{
 							$this->Compra->cambiarEstado($id, 'RECHAZO_COMERCIO', 'Monto informado por Transbank no concuerda', 0, 0);

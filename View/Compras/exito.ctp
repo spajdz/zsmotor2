@@ -61,18 +61,18 @@
 				<tr>
 					<td data-title="Imagen:" class="hidden-xs">
 						<?= $this->Html->link(
-							$this->Html->image($this->Hookipa->imagen($detalle['Producto']['codigo']), array('class' => 'img-responsive')),
-							array('action' => 'view', $detalle['Producto']['codigo']),
+							$this->Html->image($this->App->imagen($detalle['Producto']['sku']), array('class' => 'img-responsive')),
+							array('action' => 'view', $detalle['Producto']['sku']),
 							array('escape' => false)
 						); ?>
 					</td>
 					<td data-title="Nombre:">
 						<?= $this->Html->link(
 							$detalle['Producto']['articulo'],
-							array('controller' => 'productos', 'action' => 'view', $detalle['Producto']['codigo'], 'catalogo')
+							array('controller' => 'productos', 'action' => 'view', $detalle['Producto']['sku'], 'catalogo')
 						); ?>
 					</td>
-					<td data-title="Código:" class="isbn"><?= $detalle['Producto']['codigo']; ?></td>
+					<td data-title="Código:" class="isbn"><?= $detalle['Producto']['sku']; ?></td>
 					<td data-title="Precio:" class="precio">$<?= number_format($detalle['precio_unitario'], 0, null, '.'); ?></td>
 					<td data-title="Cantidad:"><?= $detalle['cantidad']; ?></td>
 					<td data-title="Subtotal:" class="precio js-producto-subtotal">$<?= number_format(($detalle['precio_unitario'] * $detalle['cantidad']), 0, null, '.'); ?></td>

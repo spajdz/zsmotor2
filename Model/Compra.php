@@ -144,15 +144,6 @@ class Compra extends AppModel
 			'order'					=> '',
 			'counterCache'			=> false,
 			'counterScope'			=> array('Asociado.modelo' => 'DespachoGratuito')
-		),
-		'Sucursal' => array(
-			'className'				=> 'Sucursal',
-			'foreignKey'			=> 'tienda_retiro_id',
-			'conditions'			=> '',
-			'fields'				=> '',
-			'order'					=> '',
-			'counterCache'			=> false,
-			'counterScope'			=> array('Asociado.modelo' => 'Sucursal')
 		)
 	);
 	public $hasMany = array(
@@ -544,18 +535,13 @@ class Compra extends AppModel
 				'conditions'		=> array('Compra.id' => $this->data[$this->name]['id']),
 				'contain'			=> array(
 					'Usuario',
-					'DetalleCompra'		=> array('Producto' => 'Colegio', 'Lista', 'Reserva'),
+					'DetalleCompra'		=> array('Producto'),
 					'EstadoCompra',
 					'Direccion'			=> array('Comuna' => array('Region')),
 					'Sucursal'
 				)
 			));
 
-			/**
-			 * Si la oc corresponde a una lista o reserva, agregamos la informacion del colegio
-			 */
-			$info_colegio		=	( $compra['Compra']['lista'] ? $compra['DetalleCompra'][0]['Lista'] : $compra['DetalleCompra'][0]['Reserva'] );
-			$compra['Colegio']	=	$info_colegio;
 
 			/**
 			 * Tipo de pago y cuota
@@ -563,8 +549,8 @@ class Compra extends AppModel
 			$compra['Compra']['tipo_pago']		= TransbankComponent::tipoPago($compra['Compra']['tbk_tipo_pago']);
 			$compra['Compra']['tipo_cuota']		= TransbankComponent::tipoCuota($compra['Compra']['tbk_tipo_pago']);
 
-			$evento			= new CakeEvent('Model.Compra.afterSave', $this, $compra);
-			$this->getEventManager()->dispatch($evento);
+			// $evento			= new CakeEvent('Model.Compra.afterSave', $this, $compra);
+			// $this->getEventManager()->dispatch($evento);
 		}
 	}
 
