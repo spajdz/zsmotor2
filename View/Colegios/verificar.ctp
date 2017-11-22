@@ -1,0 +1,1 @@
+<?= $this->Hookipa->colegiosImagen($colegios);
