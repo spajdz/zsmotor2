@@ -7,7 +7,7 @@
 		<div class="row inicio">
 			<div class="col-sm-12 exito">
 				Hola <?= $compra['Usuario']['nombre']; ?>, gracias por preferirnos.
-				Si tienes alguna pregunta sobre la <h3>Orden de Compra N° <?= $compra['Compra']['id']; ?></h3>,
+				Si tienes alguna pregunta sobre la <h3>Orden de Compra N° <?= $compra['Compra']['tbk_orden_compra']; ?></h3>,
 				por favor <?= $this->Html->link('contáctenos', array('controller' => 'contactos', 'action' => 'add')); ?>
 			</div>
 			<div class="col-sm-6 datos-facturacion">
@@ -29,7 +29,7 @@
 				<p><span>Método de pago:</span> Webpay Transbank</p>
 				<p><span>Moneda de pago:</span> Pesos Chilenos (CLP)</p>
 				<p><span>Tipo de Transacción:</span> Venta</p>
-				<p><span>Nombre comercio:</span> Hookipa S.A.</p>
+				<p><span>Nombre comercio:</span> Zs Motor</p>
 				<p><span>URL comercio:</span> <?= Router::url('/', true); ?></p>
 				<p><span>Resultado transacción:</span> <span class="label label-success">Aprobada</span></p>
 				<p><span>Orden de compra N°:</span><?= $compra['Compra']['id']; ?></p>
@@ -61,14 +61,14 @@
 				<tr>
 					<td data-title="Imagen:" class="hidden-xs">
 						<?= $this->Html->link(
-							$this->Html->image($this->App->imagen($detalle['Producto']['sku']), array('class' => 'img-responsive')),
+							$this->Html->image($this->App->imagen($detalle['Producto']['sku']), array('class' => 'img-responsive', 'style' => 'max-width: 100px')),
 							array('action' => 'view', $detalle['Producto']['sku']),
 							array('escape' => false)
 						); ?>
 					</td>
 					<td data-title="Nombre:">
 						<?= $this->Html->link(
-							$detalle['Producto']['articulo'],
+							$detalle['Producto']['nombre'],
 							array('controller' => 'productos', 'action' => 'view', $detalle['Producto']['sku'], 'catalogo')
 						); ?>
 					</td>

@@ -246,33 +246,28 @@ class Categoria extends AppModel
 	 * @param			string			$lista				Lista de uniformes
 	 * @return			array								Lista de categorias
 	 */
-	public function menu($lista = 'catalogo')
+	public function menu($parent_id = 3)
 	{
-		if ( ! in_array($lista, array('catalogo', 'deportes', 'bits')) )
+		if ( ! in_array($parent_id, array(1,2,3)) )
 		{
 			return false;
 		}
 
 		return  $this->find('threaded', array(
 			'conditions'		=> array(
-				"Categoria.{$lista}"			=> true,
-				'Categoria.activo'				=> true,
-				'Categoria.nivel'				=> array(0, 1),
-				'Categoria.productos_activos >'	=> 0
+				"Categoria.parent_id"	=> $parent_id,
+				'Categoria.activo'		=> 1,
 			),
 			'fields'			=> array(
 				'Categoria.id',
 				'Categoria.nombre',
 				'Categoria.slug',
-				'Categoria.nivel',
 				'Categoria.parent_id'
 			),
 			'order'				=> array(
-				'Categoria.nivel'			=> 'ASC',
 				'Categoria.nombre'			=> 'ASC'
 			),
 			'callbacks' 		=> false
-			//'cache'				=> sprintf('menu-principal-%s', $lista)
 		));
 	}
 }

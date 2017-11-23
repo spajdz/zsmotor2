@@ -15,6 +15,7 @@ foreach ( ['neumaticos', 'accesorios', 'llantas'] as $tipo )
 
 Router::connect("/neumaticos/*", array('controller' => 'productos', 'action' => 'categorias', 'neumaticos'));
 Router::connect("/llantas/*", array('controller' => 'productos', 'action' => 'categorias', 'llantas'));
+Router::connect('/categoria/*', array('controller' => 'productos', 'action' => 'categoria'));
 
 
 // LO QUE ES DE HOOKIPA

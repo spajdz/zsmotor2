@@ -2,13 +2,12 @@
 App::uses('AppController', 'Controller');
 class ProductosController extends AppController
 {
-
+	public $uses = array('Producto', 'Categoria');
 	// ZSMOTOR
-
 	public function index($categoria = null){
-		$limite		= ($this->Session->check('Catalogo.Preferencias.limite') ? $this->Session->read('Catalogo.Preferencias.limite') : 2);
+		$limite		= ($this->Session->check('Catalogo.Preferencias.limite') ? $this->Session->read('Catalogo.Preferencias.limite') : 10);
 
-		if ( isset($this->params->params['named']['limite']) && in_array($this->params->params['named']['limite'], array(2,10, 20, 30)) )
+		if ( isset($this->params->params['named']['limite']) && in_array($this->params->params['named']['limite'], array(2,10,20, 30, 40)) )
 		{
 			$limite				= $this->params->params['named']['limite'];
 			$this->Session->write('Preferencias.limite', $limite);
@@ -40,14 +39,18 @@ class ProductosController extends AppController
 			'fields' => array(
 				'Producto.sku'
 				,'Producto.id'
+				,'Producto.categoria_id'
 				,'Producto.nombre'
 				,'Producto.slug'
 				,'Producto.stock'
 				,'Producto.precio_publico'
 				,'Producto.oferta_publico'
+				,'Producto.oferta_mayorista'
 				,'Producto.dcto_publico'
+				,'Producto.dcto_mayorista'
 				,'Producto.preciofinal_publico'
-				,'Producto.preciofinal_publico'
+				,'Producto.preciofinal_mayorista'
+				,'Producto.precio_mayorista'
 			),
 			'contain' => array(
 				'Marca' => array(
@@ -65,14 +68,88 @@ class ProductosController extends AppController
 		$this->set(compact('productos', 'categoria', 'categoria_id', 'limite'));
 	}
 
+	public function categoria($slugcat=null, $slugsubcat = null){
+		if(empty($slugcat)){
+			$this->redirect('/');
+		}
+
+		$categoria = $this->Categoria->find('first', array(
+			'conditions' => array(
+				'Categoria.activo' 	=> 1,
+				'Categoria.slug'	=> $slugcat
+			)
+		));
+
+		if(empty($categoria)){
+			$this->redirect('/');
+		}
+
+		$condiciones['Producto.activo'] = 1;
+
+		$limite		= ($this->Session->check('Catalogo.Preferencias.limite') ? $this->Session->read('Catalogo.Preferencias.limite') : 2);
+
+		if ( isset($this->params->params['named']['limite']) && in_array($this->params->params['named']['limite'], array(2,10,20, 30, 40)) )
+		{
+			$limite				= $this->params->params['named']['limite'];
+			$this->Session->write('Preferencias.limite', $limite);
+		}
+
+		if(!empty($slugsubcat)){
+			$subcategoria = $this->Categoria->find('first', array(
+				'conditions' => array(
+					'Categoria.activo' => 1,
+					'Categoria.slug'	=> $slugsubcat,
+					'Categoria.parent_id' => $categoria['Categoria']['id']
+				)
+			));
+
+			if(empty($subcategoria)){
+				$this->redirect('/categoria/'.$categoria['Categoria']['slug']);
+			}
+
+			$condiciones['Producto.categoria_id'] = $subcategoria['Categoria']['id'];
+		}else{
+			$subcategorias = $this->Categoria->find('list', array(
+				'conditions' => array(
+					'Categoria.parent_id' => $categoria['Categoria']['id']
+				),
+				'fields' => array(
+					'Categoria.id'
+				)
+			));	
+
+			$condiciones['Producto.categoria_id'] = $subcategorias;
+		}
+
+		$this->paginate	= array(
+			'conditions'	=> $condiciones,
+			'limit' 		=> $limite,
+			'contain' 		=> array(
+				'Marca'
+			)
+		);
+		$productos	= $this->paginate();
+		$categoria = 'accesorios';
+		$this->set(compact('productos', 'limite', 'categoria'));
+	}
+
 
 	public function categorias($categoria = null, $categoria_b = null,  $subcategoria_b = null, $subsubcategoria_b = null){
+
 		if(empty($categoria)){
 			$this->Producto->redirect('/');
 		}
 
 		if(empty($categoria_b)){
 			$this->redirect('/'.$categoria);
+		}
+
+		$limite		= ($this->Session->check('Catalogo.Preferencias.limite') ? $this->Session->read('Catalogo.Preferencias.limite') : 2);
+
+		if ( isset($this->params->params['named']['limite']) && in_array($this->params->params['named']['limite'], array(2,10,20, 30, 40)) )
+		{
+			$limite				= $this->params->params['named']['limite'];
+			$this->Session->write('Preferencias.limite', $limite);
 		}
 
 		$condiciones['Producto.activo'] = 1;
@@ -96,15 +173,26 @@ class ProductosController extends AppController
 		}
 
 		$this->paginate	= array(
-				'conditions' => $condiciones,
-				'limit' => 1
+				'conditions'	=> $condiciones,
+				'limit' 		=> $limite,
+				'contain' 		=> array(
+					'Marca'
+				)
 			);
 		$productos	= $this->paginate();
 
-		$this->set(compact('productos'));
+		$this->set(compact('productos', 'limite', 'categoria'));
 	}
 
 	public function filtros(){
+		$limite		= ($this->Session->check('Catalogo.Preferencias.limite') ? $this->Session->read('Catalogo.Preferencias.limite') : 2);
+
+		if ( isset($this->params->params['named']['limite']) && in_array($this->params->params['named']['limite'],array(2,10,20, 30, 40)) )
+		{
+			$limite				= $this->params->params['named']['limite'];
+			$this->Session->write('Preferencias.limite', $limite);
+		}
+
 		if($this->request->is('post')){
 			if(!empty($this->request->data['Producto']['filtro'])){
 				$this->Session->write('Filtro.texto', $this->request->data['Producto']['filtro']);
@@ -127,7 +215,7 @@ class ProductosController extends AppController
 			}else if($categoria == 'llantas'){
 				$condiciones['Producto.categoria_id'] = 1; 
 			}else if($categoria == 'accesorios'){
-				$condiciones['Producto.categoria_id'] = 3; 
+				$condiciones['Producto.categoria_id <>'] = array(1,2); 
 			}
 		}
 
@@ -147,11 +235,14 @@ class ProductosController extends AppController
 					),
 					'AND' => $condiciones
 				),
-				'limit' => 1
+				'limit' => $limite,
+				'contain' => array(
+					'Marca'
+				)
 			);
 			$productos	= $this->paginate();
 		}
-		$this->set(compact('productos', 'categoria'));
+		$this->set(compact('productos', 'categoria', 'limite'));
 	}
 
 	public function view($categoria_slug = null, $marca_slug=null, $producto_slug = null)
@@ -315,8 +406,6 @@ class ProductosController extends AppController
 
 	public function carro()
 	{
-		
-
 		/**
 		 * Verifica si hay productos en catalogo
 		 */

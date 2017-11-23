@@ -96,3 +96,8 @@
   background-color: #aaa;
   color: #fff;
 }
+
+span.precio-normal {
+    font-size: 12pt !important;
+    text-decoration: line-through;
+}

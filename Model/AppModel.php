@@ -97,6 +97,20 @@ class AppModel extends Model
 	 */
 	public function find($type = 'first', $query = array())
 	{
+		switch ($type) {
+            case 'threaded' :
+                $results = parent::find('all', $query);
+
+                foreach($results as &$r) {
+                    $r['children'] = $this->find('all', array(
+                            'conditions' => array('parent_id' => $r[$this->alias][$this->primaryKey])
+                    ));
+                }
+                return $results;
+
+            default:
+                return parent::find($type, $query);
+        }
 		/**
 		 * Solicita query con cache activado
 		 */

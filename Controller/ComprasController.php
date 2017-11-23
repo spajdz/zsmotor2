@@ -130,6 +130,11 @@ class ComprasController extends AppController
 		$urlFinal 				= Router::url(array('controller' => 'compras', 'action' => 'exito'), true);
 		$monto 					= $compra['Compra']['total'];
 
+		$this->Compra->id = $id;
+		if(!$this->Compra->save(array('tbk_orden_compra' => $ordenCompra ))){
+			prx($this->Compra->validationErrors);
+		}
+
 		/**
 		* Se guarda la oc en sesion para luego poder compararla con la respuesta de transbank
 		*/
@@ -185,7 +190,7 @@ class ComprasController extends AppController
 						$this->Compra->set($data);
 						if ( ! $this->Compra->validates() || ! $this->Compra->save($data) )
 						{
-							prx( $this->Compra->getDataSource()->getLog(false, false));
+							// prx( $this->Compra->getDataSource()->getLog(false, false));
 							$this->Compra->cambiarEstado($id, 'RECHAZO_COMERCIO', 'POST Transbank no pasa validación DB', 1, 0);
 
 							$this->redirect(array('controller' => 'compras', 'action' => 'fracaso'));

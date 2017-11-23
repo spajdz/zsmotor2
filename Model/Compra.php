@@ -538,7 +538,6 @@ class Compra extends AppModel
 					'DetalleCompra'		=> array('Producto'),
 					'EstadoCompra',
 					'Direccion'			=> array('Comuna' => array('Region')),
-					'Sucursal'
 				)
 			));
 

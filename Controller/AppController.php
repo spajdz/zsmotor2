@@ -145,9 +145,15 @@ class AppController extends Controller
 
 	public function beforeRender()
 	{
-		// phpinfo();
 		if ( empty($this->request->params['admin']) )
 		{
+			// Cargo las categorias de los accesorios
+			$Categoria			= ClassRegistry::init('Categoria');
+			$categorias_menu	= array(
+				'accesorios'	=> $Categoria->menu(3),
+			);
+			$this->set(compact('categorias_menu'));
+
 			/**
 			 * Camino de migas
 			 */
@@ -163,6 +169,14 @@ class AppController extends Controller
 			 */
 			$estado_carro		= $this->Carro->estado();
 			$this->set(compact('estado_carro'));
+
+			$usuario = AuthComponent::user();
+			$esMayorista = false;
+			if(!empty($usuario) && $usuario['tipo_usuario_id'] == 2){
+				$esMayorista = true;
+			}
+
+			$this->set(compact('esMayorista'));
 		}
 	}
 

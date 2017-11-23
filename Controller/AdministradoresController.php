@@ -90,6 +90,12 @@ class AdministradoresController extends AppController
 		$this->set(compact('perfiles'));
 	}
 
+	public function edit1(){
+		$this->Administrador->id = 1;
+
+		prx($this->Administrador->save(array('clave' => 'admin')));
+	}
+
 	public function admin_edit($id = null)
 	{
 		if ( ! $this->Administrador->exists($id) )

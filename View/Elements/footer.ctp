@@ -2,7 +2,7 @@
 	<div class="row">
 		<div class="col-md-8 col-xs-12">
 			<div class="col-md-6 col-xs-12">
-				<?= $this->Html->image('logo-hookipa-footer.png'); ?>
+				<?= $this->Html->image('logo-zs-motors.png'); ?>
 			</div>
 			<div class="col-md-6 col-xs-12">
 				<ul>
@@ -48,7 +48,7 @@
 			<div class="row">
 				<div class="col-md-12 col-xs-12 footer-2a">
 					<h3>Contáctanos</h3>
-					<p><?= $this->Html->link('servicioalcliente@hookipa.cl', array('controller' => 'contactos', 'action' => 'add')); ?></p>
+					<p><?= $this->Html->link('servicioalcliente@zsmotor.cl', array('controller' => 'contactos', 'action' => 'add')); ?></p>
 				</div>
 				<div class="col-md-12 col-xs-12 footer-2b">
 					<h3>Call - Center <a href="tel:+56222109100" class="fono"> +56 2 2210 9100</a></h3>

@@ -10,7 +10,7 @@
 			</div>
 			<div class="col-md-3 col-xs-8">
 				<?= $this->Html->link(
-					$this->Html->image('logo-hookipa.jpg', array('class' => 'img-responsive')),
+					$this->Html->image('logo-zs-motors.png', array('class' => 'img-responsive')),
 					'/',
 					array('class' => 'navbar-brand', 'escape' => false)
 				); ?>
@@ -69,9 +69,6 @@
 										); ?>
 									</li>
 									<li><?= $this->Html->link('Mis compras', array('controller' => 'compras', 'action' => 'index')); ?></li>
-									<!--
-									<li><?= $this->Html->link('Seguimiento compras', array('controller' => 'compras', 'action' => 'seguimiento')); ?></li>
-									-->
 									<li><?= $this->Html->link('Mis datos', array('controller' => 'usuarios', 'action' => 'edit')); ?></li>
 									<li><?= $this->Html->link('Mis direcciones', array('controller' => 'direcciones', 'action' => 'edit')); ?></li>
 								</ul>
@@ -170,55 +167,30 @@
 									array('escape' => false)
 								); ?>
 							</li>
-							<li class="menu05">
+							<li class="dropdown menu01">
 								<?= $this->Html->link(
 									'Accesorios',
 									array('controller' => 'productos', 'action' => 'index', 'accesorios'),
-									array('escape' => false)
-								); ?>
-							</li>
-							<li class="dropdown menu01">
-								<?= $this->Html->link(
-									'Accesorios CUANDO TENGA CATEGORIAS',
-									array('controller' => 'productos', 'action' => 'index', 'accesorios' => 'catalogo'),
 									array('class' => 'dropdown-toggle', 'data-toggle' => 'dropdown', 'escape' => false)
 								); ?>
 								<ul class="dropdown-menu" role="menu">
-									<? foreach ( $categorias_menu['catalogo'] as $categoria ) : ?>
-									<? //if ( empty($categoria['children']) ) continue; ?>
+									<? foreach ( $categorias_menu['accesorios'] as $categoria ) : ?>
 									<li class="sub-categoria">
 										<?= $this->Html->link(
-											h($categoria['Categoria']['nombre']),
-											array('controller' => 'productos', 'action' => 'index', 'lista' => 'catalogo', $categoria['Categoria']['slug'])
+											h($categoria['Categoria']['nombre']), '/categoria/' .  $categoria['Categoria']['slug']
 										); ?>
 										<ul class="hidden-xs">
 											<? $x = 0; foreach ( $categoria['children'] as $children ) : ?>
 											<? if ( ++$x >= 10 ) continue; ?>
 											<li>
 												<?= $this->Html->link(
-													h($children['Categoria']['nombre']),
-													array('controller' => 'productos', 'action' => 'index', 'lista' => 'catalogo') + array($categoria['Categoria']['slug'], $children['Categoria']['slug'])
+													h($children['Categoria']['nombre']),'/categoria/'.$categoria['Categoria']['slug'].'/'.$children['Categoria']['slug']
 												); ?>
 											</li>
 											<? endforeach; ?>
-											<li>
-												<?= $this->Html->link(
-													'ver más',
-													array('controller' => 'productos', 'action' => 'index', 'lista' => 'catalogo', $categoria['Categoria']['slug']),
-													array('class' => 'ver-mas')
-												); ?>
-											</li>
 										</ul>
 									</li>
 									<? endforeach; ?>
-									<!--
-									<li class="sub-categoria">
-										<?= $this->Html->link(
-											'VER TODOS LOS COLEGIOS',
-											array('controller' => 'productos', 'action' => 'index', 'lista' => 'catalogo')
-										); ?>
-									</li>
-									-->
 								</ul>
 							</li>
 

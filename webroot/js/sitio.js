@@ -259,6 +259,7 @@ jQuery.extend(
 		/**
 		 * Animaciones de acciones de productos (agregar, eliminar, etc)
 		 */
+
 		producto			: {
 			/**
 			 * Animaciones de carro de compras
@@ -861,9 +862,8 @@ jQuery(document).ready(function($)
 			nombre			= $this.attr('data-nombre'),
 			imagen			= $this.attr('data-imagen'),
 			wipe			= ($this.attr('data-wipe') ? 1 : 0),
-			cantidad		= parseInt($this.attr('data-cantidad'), 10),
+			cantidad		= parseInt($('#selectCantidad'+id).val(), 10),
 			cantidad		= (isNaN(cantidad) || cantidad < 1 ? 1 : cantidad);
-
 		/**
 		 * Agrega el producto al carro
 		 */
