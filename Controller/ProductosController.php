@@ -606,7 +606,7 @@ class ProductosController extends AppController
 									,'marca' => (empty($producto['MARCA']) || is_array($producto['MARCA'])) ? '' : trim(utf8_encode($producto['MARCA']))
 									,'activo' => trim($producto['ACTIVO'])
 									,'ficha' => (empty($producto['FICHA']) || is_array($producto['FICHA'])) ? '' : trim(utf8_encode($producto['FICHA']))
-									,'id_erp' => (!empty($producto['ID'])) ? trim($producto['ID']) : NULL
+									// ,'id_erp' => (!empty($producto['ID'])) ? trim($producto['ID']) : NULL
 									,'stock_fisico' => trim($producto['STOCK_FI'])
 									,'super_familia' => (empty($producto['SUPER_FAM']) || is_array($producto['SUPER_FAM'])) ? '' : trim(utf8_encode($producto['SUPER_FAM']))
 									,'familia' => (empty($producto['FAMILIA']) || is_array($producto['FAMILIA'])) ? '' : trim(utf8_encode($producto['FAMILIA']))

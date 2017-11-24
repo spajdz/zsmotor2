@@ -145,11 +145,21 @@ BEGIN
 					-- BUSCO LA MARCA 
 					SELECT id, COUNT(id) INTO m_marca_id, m_count_marca
 					FROM sitio_marcas m
-					WHERE TRIM(LOWER(m.nombre)) = TRIM(LOWER(producto_marca))
+					WHERE TRIM(LOWER(m.nombre)) = TRIM(LOWER(cp_marca))
 					LIMIT 1;
 
+					-- Si no existe la marca, se crea
+					IF m_count_marca = 0 THEN
+						INSERT INTO sitio_marcas (nombre, slug, created, modified, imagen) VALUES (CONCAT(TRIM(UCASE(SUBSTRING(cp_marca, 1, 1))),LCASE(TRIM(SUBSTRING(cp_marca, 2)))),TRIM(REPLACE(REPLACE(cp_marca, '/', '-'), ' ', '-')), CURDATE(), CURDATE(), CONCAT(cp_sku, '.jpg') );
+						SET m_marca_id = LAST_INSERT_ID();
+					END IF;
 
-				ENDIF;
+					-- Si es accesorio busco el id de la categoria
+					IF (cp_categoria_id == 3) THEN
+					END IF;
+
+
+				END IF;
 		UNTIL done END REPEAT;
 	CLOSE productos;
 END
