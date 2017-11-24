@@ -660,10 +660,6 @@ class Compra extends AppModel
 	public function registrosOC($reserva = false, $lista = false, $resgistro = null)
 	{
 		$datos_oc		=	$this->find('all', array(
-			'conditions'		=> array(
-				'Compra.reserva' 	=> ($reserva ? true : false),
-				'Compra.lista'		=> ($lista ? true : false)
-			),
 			'contain'			=> array('Usuario', 'EstadoCompra'),
 			'order'				=> array('Compra.created' => 'DESC'),
 			'limit'				=> $resgistro
@@ -686,18 +682,18 @@ class Compra extends AppModel
 	 */
 	public function valorTotalRegistroOC($fecha_incio, $fecha_fin, $reserva = false, $lista = false)
 	{
+		
 		$alias = ( $lista ? 'total_lista' : ( ! $reserva ? 'total_compra' : 'total_reserva'));
-
 		$valor_total 	= $this->find('first', array(
 			'conditions'					=>	array(
 				'estado_compra_id' 				=> 4,
-				'Compra.reserva'				=> $reserva,
-				'Compra.lista'					=> $lista,
 				'Compra.created >='				=> sprintf('%s 00:00:00', $fecha_incio),
 				'Compra.created <='				=> sprintf('%s 23:59:59', $fecha_fin)
 			),
 			'fields'						=>	array(sprintf('SUM(total) AS %s', $alias)),
 		));
+
+		// prx($this->getDataSource()->getLog(false, false));
 		if ( empty($valor_total[0][$alias]) )
 		{
 			$valor_total[0][$alias] = "0";
@@ -780,113 +776,6 @@ class Compra extends AppModel
 					'fields'						=>	array('SUM(total) AS total')
 				))[0]['total'],
 
-				/** Cantidad total de reservas */
-				'total_reserva'					=>	$this->find('count', array(
-					'conditions'					=>	array(
-						'Compra.reserva'	=>	true,
-						'estado_compra_id' 				=> 4
-					)
-				)),
-				/** Cantidad total de reservas mes actual */
-				'total_reserva_mes_actual'		=>	$this->find('count', array(
-					'conditions'					=>	array(
-						'Compra.reserva'				=>	true,
-						'estado_compra_id' 				=> 4,
-						'Compra.created >='				=> sprintf('%s 00:00:00', $fecha[0]['inicio']),
-						'Compra.created <= '			=> sprintf('%s 23:59:59', $fecha[0]['fin']),
-					)
-				)),
-				/** Cantidad total de reservas mes anterior*/
-				'total_reserva_mes_anterior'	=>	$this->find('count', array(
-					'conditions'					=>	array(
-						'Compra.reserva'				=>	true,
-						'estado_compra_id' 				=> 4,
-						'Compra.created >='				=> sprintf('%s 00:00:00', $fecha[1]['inicio']),
-						'Compra.created <= '			=> sprintf('%s 23:59:59', $fecha[1]['fin']),
-					)
-				)),
-				/** Valor total reservas */
-				'total_valor_reservas'			=>	$this->find('first', array(
-					'conditions'					=>	array(
-						'estado_compra_id' 				=> 4,
-						'Compra.reserva'				=>	true
-					),
-					'fields'						=>	array('SUM(total) AS total_reserva')
-				))[0]['total_reserva'],
-				/** Valor total reservas mes actual */
-				'total_valor_reservas_actual'			=>	$this->find('first', array(
-					'conditions'					=>	array(
-						'estado_compra_id' 				=> 4,
-						'Compra.reserva'				=>	true,
-						'Compra.created >='				=> sprintf('%s 00:00:00', $fecha[0]['inicio']),
-						'Compra.created <= '			=> sprintf('%s 23:59:59', $fecha[0]['fin'])
-					),
-					'fields'						=>	array('SUM(total) AS total_reserva_actual')
-				))[0]['total_reserva_actual'],
-				/** Valor total reservas mes anterior*/
-				'total_valor_reservas_anterior'			=>	$this->find('first', array(
-					'conditions'					=>	array(
-						'estado_compra_id' 				=> 4,
-						'Compra.reserva'				=>	true,
-						'Compra.created >='				=> sprintf('%s 00:00:00', $fecha[1]['inicio']),
-						'Compra.created <= '			=> sprintf('%s 23:59:59', $fecha[1]['fin'])
-					),
-					'fields'						=>	array('SUM(total) AS total_reserva_anterior')
-				))[0]['total_reserva_anterior'],
-
-				/** Cantidad total de listas */
-				'total_listas'					=>	$this->find('count', array(
-					'conditions'					=>	array(
-						'Compra.lista'	=>	true,
-						'estado_compra_id' 				=> 4
-					)
-				)),
-				/** Cantidad total de listas mes actual */
-				'total_lista_mes_actual'		=>	$this->find('count', array(
-					'conditions'					=>	array(
-						'Compra.lista'				=>	true,
-						'estado_compra_id' 				=> 4,
-						'Compra.created >='				=> sprintf('%s 00:00:00', $fecha[0]['inicio']),
-						'Compra.created <= '			=> sprintf('%s 23:59:59', $fecha[0]['fin']),
-					)
-				)),
-				/** Cantidad total de listas mes anterior*/
-				'total_lista_mes_anterior'	=>	$this->find('count', array(
-					'conditions'					=>	array(
-						'Compra.lista'				=>	true,
-						'estado_compra_id' 				=> 4,
-						'Compra.created >='				=> sprintf('%s 00:00:00', $fecha[1]['inicio']),
-						'Compra.created <= '			=> sprintf('%s 23:59:59', $fecha[1]['fin']),
-					)
-				)),
-				/** Valor total listas */
-				'total_valor_listas'			=>	$this->find('first', array(
-					'conditions'					=>	array(
-						'Compra.lista'				=>	true,
-						'estado_compra_id' 				=> 4
-					),
-					'fields'						=>	array('SUM(total) AS total_lista')
-				))[0]['total_lista'],
-				/** Valor total listas mes actual */
-				'total_valor_listas_actual'			=>	$this->find('first', array(
-					'conditions'					=>	array(
-						'Compra.lista'				=>	true,
-						'estado_compra_id' 				=> 4,
-						'Compra.created >='				=> sprintf('%s 00:00:00', $fecha[0]['inicio']),
-						'Compra.created <= '			=> sprintf('%s 23:59:59', $fecha[0]['fin'])
-					),
-					'fields'						=>	array('SUM(total) AS total_lista_actual')
-				))[0]['total_lista_actual'],
-				/** Valor total listas mes anterior*/
-				'total_valor_listas_anterior'			=>	$this->find('first', array(
-					'conditions'					=>	array(
-						'Compra.lista'				=>	true,
-						'estado_compra_id' 				=> 4,
-						'Compra.created >='				=> sprintf('%s 00:00:00', $fecha[1]['inicio']),
-						'Compra.created <= '			=> sprintf('%s 23:59:59', $fecha[1]['fin'])
-					),
-					'fields'						=>	array('SUM(total) AS total_lista_anterior')
-				))[0]['total_lista_anterior'],
 				/** Mes operacional anterior */
 				'mesOperacionalAnterior'		=>	$mesOperacional
 			);
@@ -894,16 +783,14 @@ class Compra extends AppModel
 		return $widgets;
 	}
 
-	public function EnviarCorreoDespacho($info_compra = null)
+	public function beforeSave($options = array())
 	{
-		$evento			= new CakeEvent('Model.CompraDespacho.preparacionBodega', $this, $info_compra);
-		$this->getEventManager()->dispatch($evento);
-	}
+		parent::beforeSave($options);
 
-	public function EnviarCorreoEntregaDespacho($info_compra = null)
-	{
-		$evento			= new CakeEvent('Model.CompraEntregaDespacho.entregaDespacho', $this, $info_compra);
-		$this->getEventManager()->dispatch($evento);
+		$this->data[$this->alias]['created']	=  date('Y-m-d H:i:s');
+		$this->data[$this->alias]['modified']	=  date('Y-m-d H:i:s');
+		
+		return true;
 	}
 
 }

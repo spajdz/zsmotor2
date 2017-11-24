@@ -422,36 +422,36 @@ jQuery(document).ready(function($)
 			$(this).parents('tr').first().remove();
 		});
 	}
-
+	
    if ( typeof(valores_oc) !== 'undefined' )
    {
         Morris.Line({
-			element: 'dashboard-line-2',
-			data: valores_oc,
-			xkey: 'y',
-			ykeys: ['total_compra', 'total_lista', 'total_reserva', 'total_promocion'],
-			labels: ['Compra','Lista', 'Reserva', 'Promoción'],
-			resize: true,
-			lineColors: ['#848484','#FF8000', 'blue', '#B64645'],
-			parseTime: true,
-			preUnits: '$'
+         element: 'dashboard-line-2',
+         data: valores_oc,
+         xkey: 'y',
+         ykeys: ['total_compra'],
+         labels: ['Ventas'],
+         resize: false,
+         lineColors: ['#848484','#FF8000', 'blue'],
+		 parseTime: true,
+		 preUnits: '$'
        });
    }
 
 	if ( typeof(cantidad_estados) !== 'undefined' )
     {
         Morris.Line({
-			element: 'dashboard-line-1',
-			data: cantidad_estados,
-			xkey: 'y',
-			ykeys: ['1', '2', '3', '4', '5'],
-			labels: $.map(estados.estados, function(el) { return el }),
-			resize: true,
-			hideHover: false,
-			gridTextSize: '10px',
-			lineColors: ['#FF8000', '#B64645', '#8A0808', '#95B75D', '#848484'],
-			gridLineColor: '#E5E5E5',
-			 parseTime: true
+        element: 'dashboard-line-1',
+        data: cantidad_estados,
+        xkey: 'y',
+        ykeys: ['1', '2', '3', '4', '5'],
+        labels: $.map(estados.estados, function(el) { return el }),
+        resize: true,
+        hideHover: false,
+        gridTextSize: '10px',
+        lineColors: ['#FF8000', '#B64645', '#8A0808', '#95B75D', '#848484'],
+        gridLineColor: '#E5E5E5',
+		 parseTime: true
         });
     }
 

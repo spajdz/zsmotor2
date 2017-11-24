@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 	<head>
-		<title>Hookipa | Administración</title>
+		<title>Zs Motor | Administración</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -23,6 +23,7 @@
 			'/backend/js/plugins/bootstrap/bootstrap.min',
 			'/backend/js/plugins/bootstrap/bootstrap-select',
 			'/backend/js/plugins/bootstrap/bootstrap-datepicker',
+			'/backend/js/plugins/datatables/jquery.dataTables.min',
 			'/backend/js/plugins/jquery.chained.remote',
 			'/backend/js/plugins/icheck/icheck.min',
 			//'/backend/js/plugins/mcustomscrollbar/jquery.mCustomScrollbar.min',
@@ -39,7 +40,7 @@
 			'/backend/js/plugins/morris/raphael-min',
 			'/backend/js/plugins/morris/morris.min',
 			'/backend/js/custom',
-			//'/backend/js/demo_dashboard',
+			'/backend/js/demo_dashboard',
 			'/backend/js/plugins/ion/ion.rangeSlider.min',
 			'/backend/js/plugins/rangeslider/jQAllRangeSliders-min',
 

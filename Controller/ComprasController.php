@@ -343,36 +343,6 @@ class ComprasController extends AppController
 	}
 
 	
-
-	public function reintentar()
-	{
-		/**
-		 * Comprueba que el usuario este logeado
-		 */
-		if ( ! $this->Auth->user() )
-		{
-			$this->redirect(array('action' => 'resumen'));
-		}
-
-		/**
-		 * Comprueba si existe una compra en estado de rechazo
-		 */
-		if ( ! ( $id = $this->Session->read('Flujo.Carro.compra_id') ) || ! $this->Compra->rechazada($id) )
-		{
-			$this->redirect(array('action' => 'resumen'));
-		}
-
-		/**
-		 * Cambia el estado de la compra a Pendiente
-		 */
-		$this->Compra->cambiarEstado($id, 'PENDIENTE');
-
-		/**
-		 * Lleva al usuario al resumen de compra
-		 */
-		$this->redirect(array('action' => 'resumen'));
-	}
-
 	public function index()
 	{
 		if ( ! $this->Auth->user() )
@@ -682,11 +652,7 @@ class ComprasController extends AppController
 		}
 		// Obtenemos la informacion de los ultimos 4 registros de compras
 		$datos_compras		=	$this->Compra->registrosOC(false,false,4);
-		// Obtenemos la informacion de las ultimas 4 reservas
-		$datos_reserva		=	$this->Compra->registrosOC(true,false,4);
-		// Obtenemos la informacion de las ultimas 4 listas
-		$datos_listas		=	$this->Compra->registrosOC(false,true,4);
-
+		
 		$this->set(compact('widgets', 'estados_compra', 'cantidad_estado', 'valores_oc', 'datos_compras','datos_reserva', 'datos_listas'));
 	}
 

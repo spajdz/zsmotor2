@@ -2,7 +2,7 @@
 App::uses('AppController', 'Controller');
 class ProductosController extends AppController
 {
-	public $uses = array('Producto', 'Categoria');
+	public $uses = array('Producto', 'Categoria', 'Carga', 'ProductosCarga');
 	// ZSMOTOR
 	public function index($categoria = null){
 		$limite		= ($this->Session->check('Catalogo.Preferencias.limite') ? $this->Session->read('Catalogo.Preferencias.limite') : 10);
@@ -503,6 +503,155 @@ class ProductosController extends AppController
 		}
 
 		$this->set(compact('data'));
+	}
+
+	//FIXME: PASAR ESTO A CONSOLA 
+	public function carga_masiva(){
+		$this->Result = '';
+    	$this->pxp = 300;
+
+    	$this->endpoint = 'http://200.29.13.186:8091/WebService1.asmx?WSDL';
+
+    	$this->auto		= true;
+		$this->carga_id	= null;
+
+    	set_time_limit(0);
+
+    	/**
+		 * Verifica que no se esté ejecutando una carga masiva anterior
+		 */
+		$anterior		= $this->Carga->find('first', array(
+			'fields'		=> array('Carga.id'),
+			'conditions'	=> array('Carga.ejecutando' => true),
+			'order'			=> array('Carga.id' => 'DESC')
+		));
+
+		if(!empty($anterior)){
+			prx('Error: Carga masiva en ejecución.');
+		}
+
+		/**
+		 * Ingresa los datos de la carga actual
+		 */
+		// $this->Carga->create();
+		// $this->Carga->save(array(
+		// 	'identificador'		=> sprintf('%s-%s', ($this->auto ? 'AUTO' : 'MANUAL'), date('Ymd-His') ),
+		// 	'ejecutando'		=> true,
+		// 	'manual'			=> !! $this->auto
+		// ));
+		// $this->carga_id		= $this->Carga->id;
+
+        App::import('Vendor', 'nusoap', array('file' => 'nusoap/nusoap.php'));
+
+        $ws = new nusoap_client($this->endpoint, 'wsdl');
+        $ws->setGlobalDebugLevel(0);
+        $err = $ws->getError();
+
+        if ($err) {
+            $this->out('Error WS');
+        }
+
+        $param = array('Registros' => $this->pxp, 'Pagina' => 1, 'TipoResultado' => 1);
+		$result = $ws->call('Ws_ListarProductosXpagina', array('parameters' => $param), '', '', false, true);
+
+		if(!$ws->fault && !$ws->getError()){
+			if(!empty($result['Ws_ListarProductosXpaginaResult']['diffgram'])){
+				$this->Producto->query('TRUNCATE TABLE sitio_productos_cargas');
+
+				for($i=1; $i <= $result['Ws_ListarProductosXpaginaResult']['diffgram']['NewDataSet']['Table1']['TotalPaginas']; $i++){
+				// for($i=1; $i <= 3; $i++){
+					pr(sprintf('PAGINA WS %d', $i));
+
+					$parametros = array('Registros' => $this->pxp, 'Pagina' => $i, 'TipoResultado' => 0);
+					$productos = $ws->call('Ws_ListarProductosXpagina', array('parameters' => $parametros), '', '', false, true);
+
+					if(!$ws->fault && !$ws->getError()){
+						if(!empty($productos['Ws_ListarProductosXpaginaResult']['diffgram'])){
+							foreach ($productos['Ws_ListarProductosXpaginaResult']['diffgram']['NewDataSet']['Table'] as $producto) {
+								// prx($producto['DESCRIP']);
+								$sku			= trim($producto['CODIGO']);
+								$nombre		 = trim(ucwords(mb_strtolower(utf8_encode($producto['DESCRIPCION']))));
+								$slugdescripcion = str_replace('/', '-', $nombre.' '.$sku);
+
+								$slug = strtolower(Inflector::slug($slugdescripcion, '-'));
+
+								$apernaduras = '';
+								$apernaduras1 = '';
+								$apernaduras2 = '';
+								if($producto['CATEGORIAS'] == 3 && !empty($producto['APERNADURAS'])){
+									$apernaduras = $producto['APERNADURAS'];
+									$array_apernaduras = explode('/', $producto['APERNADURAS']);
+									$apernaduras1 = (!empty($array_apernaduras[0])) ? trim($array_apernaduras[0]) : '';
+									$apernaduras = (!empty($array_apernaduras[1])) ? trim($array_apernaduras[1]) : '';
+								}
+
+								$this->ProductosCarga->create();
+								
+								if(!$this->ProductosCarga->save(array(
+									'sku' => $sku
+									,'nombre' => $nombre
+									,'slug' => $slug
+									,'descripcion' => (empty($producto['DESCRIP']) || is_array($producto['DESCRIP'])) ? '' : utf8_encode($producto['DESCRIP'])
+									,'stock' => trim($producto['STOCK'])
+									,'precio_publico' => trim($producto['PRECIO_PUBLICO'])
+									,'dcto_publico' => trim($producto['DSCTO_PUBLICO'])
+									,'preciofinal_publico' => trim($producto['PRECIOFINAL_PUBLICO'])
+									,'precio_mayorista' => trim($producto['PRECIO_MAYORISTA'])
+									,'dcto_mayorista' => trim($producto['DSCTO_MAYORISTA'])
+									,'preciofinal_mayorista' => trim($producto['PRECIOFINAL_MAYORISTA'])
+									,'preciofinal_mayorista' => trim($producto['PRECIOFINAL_MAYORISTA'])
+									,'categoria' =>  (empty($producto['CATEGORIA']) || is_array($producto['CATEGORIA'])) ? '' : trim(utf8_encode($producto['CATEGORIA']))
+									,'subcategoria' => (empty($producto['SUBCATEGORIA']) || is_array($producto['SUBCATEGORIA'])) ? '' : trim(utf8_encode($producto['SUBCATEGORIA']))
+									,'subsubcategoria' => (empty($producto['SUBSUBCATEGORIA']) || is_array($producto['SUBSUBCATEGORIA'])) ? '' : trim(utf8_encode($producto['SUBSUBCATEGORIA']))
+									,'marca' => (empty($producto['MARCA']) || is_array($producto['MARCA'])) ? '' : trim(utf8_encode($producto['MARCA']))
+									,'activo' => trim($producto['ACTIVO'])
+									,'ficha' => (empty($producto['FICHA']) || is_array($producto['FICHA'])) ? '' : trim(utf8_encode($producto['FICHA']))
+									,'id_erp' => (!empty($producto['ID'])) ? trim($producto['ID']) : NULL
+									,'stock_fisico' => trim($producto['STOCK_FI'])
+									,'super_familia' => (empty($producto['SUPER_FAM']) || is_array($producto['SUPER_FAM'])) ? '' : trim(utf8_encode($producto['SUPER_FAM']))
+									,'familia' => (empty($producto['FAMILIA']) || is_array($producto['FAMILIA'])) ? '' : trim(utf8_encode($producto['FAMILIA']))
+									,'categoria_id' => trim($producto['CATEGORIAS'])
+									,'stock_seguridad' => trim($producto['STOCK_SEGURIDAD'])
+									,'apernaduras' => $apernaduras
+									,'apernadura1' => $apernaduras1
+									,'apernadura2' => $apernaduras2
+									,'aro' => (empty($producto['ARO']) || is_array($producto['ARO'])) ? 0 : trim($producto['ARO'])
+									,'ancho' => ($producto['CATEGORIAS'] == 1) ? trim(utf8_encode($producto['ANCHO_LLANTA'])) : ((empty($producto['ANCHO']) || is_array($producto['ANCHO'])) ? '' : trim(utf8_encode($producto['ANCHO'])))
+									,'perfil' => (empty($producto['PERFIL']) || is_array($producto['PERFIL'])) ? '' : trim(utf8_encode($producto['PERFIL']))
+									,'oferta_mayorista' => trim($producto['OFERTA_MAYORISTA'])
+									,'oferta_publico' => trim($producto['OFERTA_PUBLICO'])
+									,'fecha_modificacion' => trim($producto['FECHA'])
+									,'hora_modificacion' => trim($producto['HORA'])
+									,'stock_b015' => trim($producto['STKB015'])
+									,'stock_b301' => trim($producto['STKB301'])
+									,'stock_b401' => trim($producto['STKB401'])
+									,'stock_b701' => trim($producto['STKB701'])
+									,'stock_b901' => trim($producto['STKB901'])
+									,'stock_bclm' => trim($producto['STKBCLM'])
+									,'stock_bvtm' => trim($producto['STKBVTM'])
+									,'stock_blco' => trim($producto['STKBLCO'])
+								))){
+									continue;
+								}
+							}
+						}
+						
+					}else{
+						pr('Error en llamada al WS');
+						pr($result);
+						prx($ws->getError());
+					}
+				}
+				pr('Productos Cargados en base de datos');
+			}
+		}else{
+			pr('Error en llamada al WS');
+			pr($result);
+			prx($ws->getError());
+		}
+
+        prx($result);
+
 	}
 
 

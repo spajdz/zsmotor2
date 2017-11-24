@@ -8,22 +8,61 @@
 	<ul class="x-navigation x-navigation-custom">
 		<li class="xn-logo">
 			<?= $this->Html->link(
-				'<span class="fa fa-dashboard"></span> <span class="x-navigation-control">Backend Hookipa</span>',
+				'<span class="fa fa-dashboard"></span> <span class="x-navigation-control">Backend Zs Motor</span>',
 				array('controller' => 'compras', 'action' => 'dashboard'),
 				array('escape' => false)
 			); ?>
 			<a href="#" class="x-navigation-control"></a>
 		</li>
 		<li class="xn-title"></li>
-		<? if ( permisosPerfilBackend($perfil_usuario, $permiso_usuario, 'dashboard') ) : ?>
-			<li class="<?= ($this->Html->menuActivo(array('controller' => 'compras', 'action' => 'dashboard')) ? 'active' : ''); ?>">
-				<?= $this->Html->link(
-					'<span class="fa fa-dashboard"></span> <span class="xn-text">Dashboard</span>',
-					array('controller' => 'compras', 'action' => 'dashboard'),
-					array('escape' => false)
-				); ?>
-			</li>
-		<? endif; ?>
+		<li class="<?= ($this->Html->menuActivo(array('controller' => 'compras', 'action' => 'dashboard')) ? 'active' : ''); ?>">
+			<?= $this->Html->link(
+				'<span class="fa fa-dashboard"></span> <span class="xn-text">Dashboard</span>',
+				array('controller' => 'compras', 'action' => 'dashboard'),
+				array('escape' => false)
+			); ?>
+		</li>
+		<li class="xn-openable <?= (
+			(
+				$this->Html->menuActivo(array('controller' => 'marcas')) ||
+				$this->Html->menuActivo(array('controller' => 'compras', 'action' => 'index')) ||
+				$this->Html->menuActivo(array('controller' => 'productos')) ||
+				$this->Html->menuActivo(array('controller' => 'productoResenas')) 
+			)
+			? 'active' : ''
+		); ?>">
+			<a href="#"><span class="fa fa-th-list"></span> <span class="xn-text">Ecommerce</span></a>
+			<ul>
+				<li class="<?= ($this->Html->menuActivo(array('controller' => 'marcas')) ? 'active' : ''); ?>">
+					<?= $this->Html->link(
+						'<span class="glyphicon glyphicon-tags"></span> <span class="xn-text">Marcas</span>',
+						array('controller' => 'marcas', 'action' => 'index'),
+						array('escape' => false)
+					); ?>
+				</li>
+				<li class="<?= ($this->Html->menuActivo(array('controller' => 'compras', 'action' => 'index')) ? 'active' : ''); ?>">
+					<?= $this->Html->link(
+						'<span class="glyphicon glyphicon-barcode"></span> <span class="xn-text">Compras</span>',
+						array('controller' => 'compras', 'action' => 'index'),
+						array('escape' => false)
+					); ?>
+				</li>
+				<li class="<?= ($this->Html->menuActivo(array('controller' => 'productos')) ? 'active' : ''); ?>">
+					<?= $this->Html->link(
+						'<span class="glyphicon glyphicon-barcode"></span> <span class="xn-text">Productos</span>',
+						array('controller' => 'productos', 'action' => 'index'),
+						array('escape' => false)
+					); ?>
+				</li>
+				<li class="<?= ($this->Html->menuActivo(array('controller' => 'productoResenas')) ? 'active' : ''); ?>">
+					<?= $this->Html->link(
+						'<span class="glyphicon glyphicon-barcode"></span> <span class="xn-text">Productos Reseñas</span>',
+						array('controller' => 'querys', 'action' => 'index'),
+						array('escape' => false)
+					); ?>
+				</li>
+			</ul>
+		</li>
 		<li class="xn-title">Ventas</li>
 		<!-- Listado de ordenes de compra -->
 		<? if ( permisosPerfilBackend($perfil_usuario, $permiso_usuario, 'compras') ) : ?>
@@ -35,31 +74,6 @@
 			); ?>
 		</li>
 		<? endif; ?>
-
-		<!--
-		<? if ( permisosPerfilBackend($perfil_usuario, $permiso_usuario, 'compras') ) : ?>
-		<li class="<?= ($this->Html->menuActivo(array('controller' => 'compras', 'action' => 'tracking')) ? 'active' : ''); ?>">
-			<?= $this->Html->link(
-				'<span class="fa fa-truck"></span> <span class="xn-text">Tracking OC</span>',
-				array('controller' => 'compras', 'action' => 'tracking'),
-				array('escape' => false)
-			); ?>
-		</li>
-		<? endif; ?>
-		-->
-
-		<!--
-		<? if ( permisosPerfilBackend($perfil_usuario, $permiso_usuario, 'descuentos') ) : ?>
-			<li class="<?= ($this->Html->menuActivo(array('controller' => 'descuentos')) ? 'active' : ''); ?>">
-				<?= $this->Html->link(
-					'<span class="fa fa-dollar"></span> <span class="xn-text">Descuentos</span>',
-					array('controller' => 'descuentos'),
-					array('escape' => false)
-				); ?>
-			</li>
-		<? endif; ?>
-		-->
-
 		<!-- Tarifas -->
 		<? if ( permisosPerfilBackend($perfil_usuario, $permiso_usuario, 'tarifa_despachos') ) : ?>
 			<li class="<?= ($this->Html->menuActivo(array('controller' => 'tarifa_despachos', 'action' => 'index')) ? 'active' : ''); ?>">
