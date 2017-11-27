@@ -107,6 +107,29 @@ class DireccionesController extends AppController
 		$this->set(compact('data'));
 	}
 
+	public function admin_index()
+	{
+		$this->paginate		= array(
+			'contain' => array(
+				'TipoDireccion',
+				'Usuario' => array(
+					'fields' => array(
+						'Usuario.nombre',
+						'Usuario.id'
+					)
+				),
+				'Comuna'=> array(
+					'fields' => array(
+						'Comuna.nombre',
+						'Comuna.id'
+					)
+				)
+			)
+		);
+		$direcciones	= $this->paginate();
+		$this->set(compact('direcciones'));
+	}
+
 	// HOOKIPA
 	public function add_hookipa()
 	{
@@ -334,14 +357,7 @@ class DireccionesController extends AppController
 		$this->redirect(array('action' => 'index'));
 	}
 
-	public function admin_index()
-	{
-		$this->paginate		= array(
-			'recursive'			=> 0
-		);
-		$direcciones	= $this->paginate();
-		$this->set(compact('direcciones'));
-	}
+
 
 	public function admin_add()
 	{
@@ -387,6 +403,7 @@ class DireccionesController extends AppController
 		}
 		$usuarios	= $this->Direccion->Usuario->find('list');
 		$comunas	= $this->Direccion->Comuna->find('list');
-		$this->set(compact('usuarios', 'comunas'));
+		$tipoDirecciones	= $this->Direccion->TipoDireccion->find('list');
+		$this->set(compact('usuarios', 'comunas', 'tipoDirecciones'));
 	}
 }

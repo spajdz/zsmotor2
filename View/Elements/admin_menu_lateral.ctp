@@ -182,7 +182,7 @@
 				<li class="<?= ($this->Html->menuActivo(array('controller' => 'usuarios')) ? 'active' : ''); ?>">
 					<?= $this->Html->link(
 						'<span class="glyphicon glyphicon-tags"></span> <span class="xn-text">Usuarios</span>',
-						array('controller' => 'usuarios'),
+						array('controller' => 'usuarios', 'action' => 'index'),
 						array('escape' => false)
 					); ?>
 				</li>

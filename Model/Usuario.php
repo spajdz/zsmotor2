@@ -52,17 +52,7 @@ class Usuario extends AppModel
 				//'required'		=> false,
 				//'on'			=> 'update', // Solo valida en operaciones de 'create' o 'update'
 			),
-		),
-		'clave' => array(
-			'notBlank' => array(
-				'rule'			=> array('notBlank'),
-				'last'			=> true,
-				//'message'		=> 'Mensaje de validación personalizado',
-				//'allowEmpty'	=> true,
-				//'required'		=> false,
-				//'on'			=> 'update', // Solo valida en operaciones de 'create' o 'update'
-			),
-		),
+		)
 	);
 
 	/**

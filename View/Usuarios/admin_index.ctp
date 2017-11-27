@@ -20,8 +20,6 @@
 								<tr class="sort">
 									<? $this->Paginator->options(array('title' => 'Haz click para ordenar por este criterio')); ?>
 									<th><?= $this->Paginator->sort('tipo_usuario_id'); ?></th>
-									<th><?= $this->Paginator->sort('rut'); ?></th>
-									<th><?= $this->Paginator->sort('dv'); ?></th>
 									<th><?= $this->Paginator->sort('nombre'); ?></th>
 									<th><?= $this->Paginator->sort('apellido_paterno'); ?></th>
 									<th>Acciones</th>
@@ -31,18 +29,11 @@
 								<? foreach ( $usuarios as $usuario ) : ?>
 								<tr>
 									<td><?= $this->Html->link($usuario['TipoUsuario']['nombre'], array('controller' => 'tipo_usuarios', 'action' => 'edit', $usuario['TipoUsuario']['id'])); ?></td>
-									<td><?= h($usuario['Usuario']['rut']); ?>&nbsp;</td>
-									<td><?= h($usuario['Usuario']['dv']); ?>&nbsp;</td>
 									<td><?= h($usuario['Usuario']['nombre']); ?>&nbsp;</td>
 									<td><?= h($usuario['Usuario']['apellido_paterno']); ?>&nbsp;</td>
 									<td>
 										<?= $this->Html->link('<i class="fa fa-edit"></i> Editar', array('action' => 'edit', $usuario['Usuario']['id']), array('class' => 'btn btn-xs btn-info', 'rel' => 'tooltip', 'title' => 'Editar este registro', 'escape' => false)); ?>
 										<?= $this->Form->postLink('<i class="fa fa-remove"></i> Eliminar', array('action' => 'delete', $usuario['Usuario']['id']), array('class' => 'btn btn-xs btn-danger confirmar-eliminacion', 'rel' => 'tooltip', 'title' => 'Eliminar este registro', 'escape' => false)); ?>
-										<? if ( $usuario['Usuario']['activo'] ) : ?>
-										<?= $this->Html->link('<i class="fa fa-ban"></i> Desactivar', array('action' => 'desactivar', $usuario['Usuario']['id']), array('class' => 'btn btn-xs btn-danger', 'rel' => 'tooltip', 'title' => 'Desactivar este registro', 'escape' => false)); ?>
-										<? else : ?>
-										<?= $this->Html->link('<i class="fa fa-check"></i> Activar', array('action' => 'activar', $usuario['Usuario']['id']), array('class' => 'btn btn-xs btn-success', 'rel' => 'tooltip', 'title' => 'Activar este registro', 'escape' => false)); ?>
-										<? endif; ?>
 									</td>
 								</tr>
 								<? endforeach; ?>

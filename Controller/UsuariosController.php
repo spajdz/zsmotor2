@@ -218,7 +218,7 @@ class UsuariosController extends AppController
 			}
 		}
 
-		$usuarioTipos = $this->Usuario->TipoUsuario->find (
+		$tipoUsuarios = $this->Usuario->TipoUsuario->find (
 			'list',
 			array (
 				'conditions' => array(
@@ -235,7 +235,7 @@ class UsuariosController extends AppController
 			)
 		);
 
-		$this->set(compact('usuarioTipos', 'tipoPagos'));
+		$this->set(compact('tipoUsuarios', 'tipoPagos'));
 	}
 
 	public function admin_edit($id = null)
@@ -250,22 +250,67 @@ class UsuariosController extends AppController
 		{
 			if ( $this->Usuario->save($this->request->data) )
 			{
-				$this->Session->setFlash("Registro editado correctamente (ID {$this->Usuario->id})", null, array(), 'success');
+				$this->Session->setFlash('Registro editado correctamente', null, array(), 'success');
 				$this->redirect(array('action' => 'index'));
 			}
 			else
 			{
-				$this->Session->setFlash('Error al guardar el registro. Por favor revisa los mensajes de validación.', null, array(), 'danger');
+				$this->Session->setFlash('Error al guardar el registro. Por favor intenta nuevamente.', null, array(), 'danger');
 			}
 		}
 		else
 		{
-			$this->request->data	= $this->Usuario->find('first', array(
-				'conditions'	=> array('Usuario.id' => $id)
-			));
+			$this->request->data = $this->Usuario->find(
+				'first',
+				array(
+					'conditions' => array(
+						'Usuario.id' => $id
+					),
+					'contain' => array(
+						'TipoPago'
+					)
+				)
+			);
 		}
-		$tipoUsuarios	= $this->Usuario->TipoUsuario->find('list');
-		$this->set(compact('tipoUsuarios', 'emails'));
+
+		$tipoUsuarios = $this->Usuario->TipoUsuario->find (
+			'list',
+			array (
+				'conditions' => array(
+					'TipoUsuario.activo' => 1
+				)
+			)
+		);
+
+		$tipoPagos = $this->Usuario->TipoPago->find (
+			'list',
+			array (
+				'conditions' => array(
+					'TipoPago.activo' => 1
+				)
+			)
+		);
+
+		$this->set(compact('tipoUsuarios', 'tipoPagos'));
+	}
+
+	public function admin_delete($id = null)
+	{
+		$this->Usuario->id = $id;
+		if ( ! $this->Usuario->exists() )
+		{
+			$this->Session->setFlash('Registro inválido.', null, array(), 'danger');
+			$this->redirect(array('action' => 'index'));
+		}
+		$this->Usuario->id = $id;
+        if ( $this->Usuario->save(array('activo' => 0)))
+        {
+			$this->Session->setFlash('Registro eliminado correctamente.', null, array(), 'success');
+			$this->redirect(array('action' => 'index'));
+		}
+
+		$this->Session->setFlash('Error al eliminar el registro. Por favor intenta nuevamente.', null, array(), 'danger');
+		$this->redirect(array('action' => 'index'));
 	}
 
 	public function admin_excel()
@@ -286,10 +331,24 @@ class UsuariosController extends AppController
 	public function admin_index()
 	{
 		$this->paginate		= array(
-			'recursive'			=> 0
+			'recursive'			=> 0,
+			'conditions'	=> array(
+				'Usuario.activo' => 1
+			)
 		);
 		$usuarios	= $this->paginate();
 		$this->set(compact('usuarios'));
+	}
+
+	public function admin_exportar()
+	{
+		$datos			= $this->Usuario->find('all', array(
+			'recursive'				=> -1
+		));
+		$campos			= array_keys($this->Usuario->_schema);
+		$modelo			= $this->Usuario->alias;
+
+		$this->set(compact('datos', 'campos', 'modelo'));
 	}
 
 }

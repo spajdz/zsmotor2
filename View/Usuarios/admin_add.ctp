@@ -11,21 +11,6 @@
 		<div class="table-responsive">
 			<?= $this->Form->create('Usuario', array('class' => 'form-horizontal', 'type' => 'file', 'inputDefaults' => array('label' => false, 'div' => false, 'class' => 'form-control'))); ?>
 				<table class="table">
-					<?
-					/*
-					<tr>
-						<th><?= $this->Form->label('rut', 'Rut'); ?></th>
-						<td><?= $this->Form->input('rut'); ?></td>
-					</tr>
-					<tr>
-						<th><?= $this->Form->label('dv', 'Dv'); ?></th>
-						<td><?= $this->Form->input('dv'); ?></td>
-					</tr>
-					<tr>
-						<th><?= $this->Form->label('nombre_completo', 'Nombre completo'); ?></th>
-						<td><?= $this->Form->input('nombre_completo'); ?></td>
-					</tr>
-					*/?>
 					<tr>
 						<th><?= $this->Form->label('nombre', 'Nombre'); ?></th>
 						<td><?= $this->Form->input('nombre'); ?></td>
@@ -47,10 +32,6 @@
 						<td><?= $this->Form->input('telefono'); ?></td>
 					</tr>
 					<tr>
-						<th><?= $this->Form->label('usuario', 'Usuario'); ?></th>
-						<td><?= $this->Form->input('usuario'); ?></td>
-					</tr>
-					<tr>
 						<th><?= $this->Form->label('clave', 'Clave'); ?></th>
 						<td><?= $this->Form->input('clave', array('type' => 'password', 'autocomplete' => 'off', 'value' => '')); ?></td>
 					</tr>
@@ -60,15 +41,15 @@
 					</tr>
 					<tr>
 						<th><?= $this->Form->label('fecha_nacimiento', 'Fecha nacimiento'); ?></th>
-						<td><?= $this->Form->input('fecha_nacimiento'); ?></td>
+						<td><?= $this->Form->input('fecha_nacimiento', array('style' => 'width: 20%;display:inline-block;' )); ?></td>
 					</tr>
 					<tr>
-						<th><?= $this->Form->label('sexo', 'Sexo'); ?></th>
-						<td><?= $this->Form->input('sexo'); ?></td>
+						<th><?= $this->Form->label('genero', 'Género'); ?></th>
+						<td><?= $this->Form->input('genero'); ?></td>
 					</tr>
 					<tr>
-						<th><?= $this->Form->label('usuario_tipo_id', 'Tipo de usuario'); ?></th>
-						<td><?= $this->Form->input('usuario_tipo_id', array('empty' => 'Seleccione')); ?></td>
+						<th><?= $this->Form->label('tipo_usuario_id', 'Tipo de usuario'); ?></th>
+						<td><?= $this->Form->input('tipo_usuario_id', array('empty' => 'Seleccione')); ?></td>
 					</tr>
 					<tr>
 						<th><?= $this->Form->label('TipoPago', 'Tipos de pago aceptados'); ?></th>
@@ -78,22 +59,6 @@
 						<th><?= $this->Form->label('activo', 'Activo'); ?></th>
 						<td><?= $this->Form->input('activo', array('class' => 'icheckbox')); ?></td>
 					</tr>
-					<?php
-					/*
-					<tr>
-						<th><?= $this->Form->label('direccion_count', 'Direccion count'); ?></th>
-						<td><?= $this->Form->input('direccion_count'); ?></td>
-					</tr>
-					<tr>
-						<th><?= $this->Form->label('direccion_activo_count', 'Direccion activo count'); ?></th>
-						<td><?= $this->Form->input('direccion_activo_count'); ?></td>
-					</tr>
-					<tr>
-						<th><?= $this->Form->label('direccion_inactivo_count', 'Direccion inactivo count'); ?></th>
-						<td><?= $this->Form->input('direccion_inactivo_count'); ?></td>
-					</tr>
-					*/
-					?>
 				</table>
 
 				<div class="pull-right">

@@ -4,7 +4,7 @@
 
 <div class="panel panel-default">
 	<div class="panel-heading">
-		<h3 class="panel-title">Editar direccion</h3>
+		<h3 class="panel-title">Editar Direccion</h3>
 	</div>
 	<div class="panel-body">
 		<div class="table-responsive">
@@ -12,16 +12,16 @@
 				<table class="table">
 					<?= $this->Form->input('id'); ?>
 					<tr>
+						<th><?= $this->Form->label('tipo_direccion_id', 'Tipo direccion'); ?></th>
+						<td><?= $this->Form->input('tipo_direccion_id', array('class' => 'form-control select')); ?></td>
+					</tr>
+					<tr>
 						<th><?= $this->Form->label('usuario_id', 'Usuario'); ?></th>
 						<td><?= $this->Form->input('usuario_id', array('class' => 'form-control select')); ?></td>
 					</tr>
 					<tr>
-						<th><?= $this->Form->label('KOCI', 'KOCI'); ?></th>
-						<td><?= $this->Form->input('KOCI'); ?></td>
-					</tr>
-					<tr>
-						<th><?= $this->Form->label('KOCM', 'KOCM'); ?></th>
-						<td><?= $this->Form->input('KOCM'); ?></td>
+						<th><?= $this->Form->label('comuna_id', 'Comuna'); ?></th>
+						<td><?= $this->Form->input('comuna_id', array('class' => 'form-control select')); ?></td>
 					</tr>
 					<tr>
 						<th><?= $this->Form->label('nombre', 'Nombre'); ?></th>
@@ -53,7 +53,7 @@
 					</tr>
 					<tr>
 						<th><?= $this->Form->label('activo', 'Activo'); ?></th>
-						<td><?= $this->Form->input('activo', array('class' => 'icheckbox')); ?></td>
+						<td><?= $this->Form->input('activo',array('class' => 'icheckbox')); ?></td>
 					</tr>
 				</table>
 

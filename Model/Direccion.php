@@ -92,6 +92,14 @@ class Direccion extends AppModel
 	 * ASOCIACIONES
 	 */
 	public $belongsTo = array(
+		'TipoDireccion' => array(
+			'className'				=> 'TipoDireccion',
+			'foreignKey'			=> 'tipo_direccion_id',
+			'conditions'			=> '',
+			'fields'				=> '',
+			'order'					=> '',
+			'counterCache'			=> true,
+		),
 		'Usuario' => array(
 			'className'				=> 'Usuario',
 			'foreignKey'			=> 'usuario_id',
