@@ -190,7 +190,6 @@ class ComprasController extends AppController
 						$this->Compra->set($data);
 						if ( ! $this->Compra->validates() || ! $this->Compra->save($data) )
 						{
-							// prx( $this->Compra->getDataSource()->getLog(false, false));
 							$this->Compra->cambiarEstado($id, 'RECHAZO_COMERCIO', 'POST Transbank no pasa validación DB', 1, 0);
 
 							$this->redirect(array('controller' => 'compras', 'action' => 'fracaso'));
@@ -237,7 +236,6 @@ class ComprasController extends AppController
 				*/
 				$this->redirect(array('controller' => 'compras', 'action' => 'pagoRechazado'));
 			}
-
 		}
 	}
 
@@ -461,16 +459,7 @@ class ComprasController extends AppController
 				$busqueda['monto_min']			= $monto_min;
 				$busqueda['monto_max']			= $monto_max;
 			}
-			// Busqueda por reserva
-			if( ! empty($reserva) )
-			{
-				$busqueda['reserva']			= $reserva;
-			}
-			// Busqueda por productos por colegios
-			if( ! empty($lista) )
-			{
-				$busqueda['lista']				= $lista;
-			}
+			
 
 			$this->redirect(array('filtro' => $busqueda));
 		}
@@ -566,16 +555,11 @@ class ComprasController extends AppController
 			'conditions'		=> array('Compra.id' => $id),
 			'contain'			=> array(
 				'Usuario',
-				'DetalleCompra'		=> array('Producto' => 'Colegio', 'Lista', 'Reserva'),
+				'DetalleCompra'		=> array('Producto'),
 				'EstadoCompra',
 				'Direccion'			=> array('Comuna' => array('Region')),
-				'Despacho',
-				'Sucursal'
 			)
 		));
-		$info_colegio		=	( $compra['Compra']['lista'] ? $compra['DetalleCompra'][0]['Lista'] : $compra['DetalleCompra'][0]['Reserva'] );
-		$compra['Colegio']	=	$info_colegio;
-
 
 		/**
 		 * Tipo de pago y cuota

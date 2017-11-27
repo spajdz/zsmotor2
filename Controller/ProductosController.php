@@ -80,6 +80,7 @@ class ProductosController extends AppController
 			)
 		));
 
+
 		if(empty($categoria)){
 			$this->redirect('/');
 		}
@@ -111,7 +112,10 @@ class ProductosController extends AppController
 		}else{
 			$subcategorias = $this->Categoria->find('list', array(
 				'conditions' => array(
-					'Categoria.parent_id' => $categoria['Categoria']['id']
+					'OR' => array(
+						'Categoria.parent_id' => $categoria['Categoria']['id'],
+						'Categoria.id'	=> $categoria['Categoria']['id']
+					)
 				),
 				'fields' => array(
 					'Categoria.id'
@@ -533,13 +537,13 @@ class ProductosController extends AppController
 		/**
 		 * Ingresa los datos de la carga actual
 		 */
-		// $this->Carga->create();
-		// $this->Carga->save(array(
-		// 	'identificador'		=> sprintf('%s-%s', ($this->auto ? 'AUTO' : 'MANUAL'), date('Ymd-His') ),
-		// 	'ejecutando'		=> true,
-		// 	'manual'			=> !! $this->auto
-		// ));
-		// $this->carga_id		= $this->Carga->id;
+		$this->Carga->create();
+		$this->Carga->save(array(
+			'identificador'		=> sprintf('%s-%s', ($this->auto ? 'AUTO' : 'MANUAL'), date('Ymd-His') ),
+			'ejecutando'		=> true,
+			'manual'			=> !! $this->auto
+		));
+		$this->carga_id		= $this->Carga->id;
 
         App::import('Vendor', 'nusoap', array('file' => 'nusoap/nusoap.php'));
 
@@ -559,7 +563,7 @@ class ProductosController extends AppController
 				$this->Producto->query('TRUNCATE TABLE sitio_productos_cargas');
 
 				for($i=1; $i <= $result['Ws_ListarProductosXpaginaResult']['diffgram']['NewDataSet']['Table1']['TotalPaginas']; $i++){
-				// for($i=1; $i <= 3; $i++){
+				// for($i=1; $i <= 10; $i++){
 					pr(sprintf('PAGINA WS %d', $i));
 
 					$parametros = array('Registros' => $this->pxp, 'Pagina' => $i, 'TipoResultado' => 0);
@@ -642,6 +646,8 @@ class ProductosController extends AppController
 						prx($ws->getError());
 					}
 				}
+
+				$this->Producto->query('CALL masivo_productos');
 				pr('Productos Cargados en base de datos');
 			}
 		}else{
@@ -652,6 +658,43 @@ class ProductosController extends AppController
 
         prx($result);
 
+	}
+
+	public function admin_index()
+	{
+		if ( $this->request->is('post') )
+		{
+			$busqueda		= array();
+			extract($this->request->data['Producto']);
+			if (!empty($sku)){
+				$busqueda['buscar']	= $sku;
+			}
+			if(!empty($categoria_id)){
+				$busqueda['categoria_id']	= $categoria_id;
+			}
+			if(!empty($marca)){
+				$busqueda['marca']	= $marca;
+			}
+			$this->redirect(array('filtro' => $busqueda));
+		}
+ 
+		$paginacion			= array(
+			'contain'		=> array('Marca'),
+			'order'				=> array('Producto.created' => 'DESC'),
+			'limit'				=> 10
+		);
+		$filtros			=	$this->params['named'];
+		$condicionFiltros	=	$this->Producto->condicionesFiltros($filtros);
+		if(!empty($condicionFiltros)){
+			$paginacion['conditions'] = $condicionFiltros;
+		}
+		$this->paginate		= $paginacion;
+		$productos			= $this->paginate();
+
+		$marcas = $this->Producto->Marca->find('list');
+		$categorias	= $this->Producto->Categoria->find('list', array('conditions' => array('id' => array(1,2,3))));
+
+		$this->set(compact('productos', 'marcas', 'categorias'));
 	}
 
 
@@ -1326,20 +1369,7 @@ class ProductosController extends AppController
 		$this->set(compact('productos', 'carro'));
 	}
 
-	public function admin_index()
-	{
-		$this->paginate		= array(
-			'fields'	=> array(
-				'Producto.id', 'Producto.codigo', 'Producto.isbn',
-				'Producto.precio', 'Producto.nombre', 'Producto.talla',
-				'Producto.codigo_articulo', 'Producto.codigo_talla',
-				'Producto.codigo_colegio', 'Producto.stock', 'Producto.activo'
-			),
-			'limit'		=> 100
-		);
-		$productos			= $this->paginate();
-		$this->set(compact('productos'));
-	}
+	
 
 	public function admin_excel()
 	{

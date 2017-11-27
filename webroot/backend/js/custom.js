@@ -102,6 +102,18 @@ jQuery(document).ready(function($)
 			]
 		});
 	}
+	if ( $('.js-summernote2').length )
+	{
+		$('.js-summernote2').summernote(
+		{
+			height		: 300,
+			focus		: true,
+			toolbar		: [
+				['style', ['bold', 'italic', 'underline', 'clear']],
+				['insert', ['link', 'picture']]
+			]
+		});
+	}
 
 	/**
 	 * Funcion que permite obtener en formato YYYY-MM-DD una fecha determinada

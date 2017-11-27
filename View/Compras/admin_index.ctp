@@ -1,4 +1,3 @@
-
 <? $this->Paginator->options(array('url' => array('action' => 'index') + $filtros)); ?>
 
 <div class="page-title">
@@ -24,7 +23,6 @@
 		<h3>Filtros</h3>
 		<?= $this->Form->create('Compra', array('inputDefaults' => array('label' => false, 'required' => false))); ?>
 			<div class="row fila-filtro">
-				<!-- Buscador libre (Nombre cliente, RUT, N° OT, Valor, Estado) -->
 				<div class="col-md-6">
 					<label class="control-label">Búsqueda libre <a href="#" class="btn btn-primary btn-xs btn-limpiar js-limpiar-busqueda" data-tipo="libre">Limpiar</a></label>
 					<div class="input-group">
@@ -37,7 +35,6 @@
 						)); ?>
 					</div>
 				</div>
-				<!-- Buscador por fecha inicial -->
 				<div class="col-md-3">
 					<label class="control-label">Fecha de compra <a href="#" class="btn btn-primary btn-xs btn-limpiar js-limpiar-busqueda" data-tipo="fecha">Limpiar</a></label>
 					<div class="input-group">
@@ -45,7 +42,6 @@
 						<?= $this->Form->input('fecha_inicio', array('data-tipo' => 'fecha', 'value' => (! empty($filtros['filtro']['fecha_min']) ? $filtros['filtro']['fecha_min'] : ''), 'class' => 'form-control', 'placeholder' => 'Fecha inicial')); ?>
 					</div>
 				</div>
-				<!-- Buscador por fecha Final-->
 				<div class="col-md-3">
 					<label class="control-label">&nbsp;</label>
 					<div class="input-group">
@@ -55,7 +51,6 @@
 				</div>
 			</div>
 			<div class="row fila-filtro">
-				<!-- Buscador por estados -->
 				<div class="col-md-6">
 					<label class="control-label">Estado de compra <a href="#" class="btn btn-primary btn-xs btn-limpiar js-limpiar-busqueda" data-tipo="estado">Limpiar</a></label>
 					<?= $this->Form->input('estado_compra_id', array(
@@ -68,7 +63,6 @@
 						)
 					); ?>
 				</div>
-				<!-- Opciones para buscar por fechas -->
 				<div class="col-md-6">
 					<label class="control-label">Periodo de tiempo</label>
 					<div class="btn-group btn-group-justified">
@@ -79,7 +73,6 @@
 					</div>
 				</div>
 			</div>
-			<!-- Slider por rango de numero de OC -->
 			<div class="row fila-filtro">
 				<div class="col-md-6">
 					 <div class="form-group">
@@ -87,7 +80,6 @@
 						<?= $this->Form->input('rango_oc', array('data-tipo' => 'oc', 'disabled' => true, 'value' => null, 'data-min-oc' => $limites['oc_primera'], 'data-max-oc' => $limites['oc_ultima'])); ?>
 					</div>
 				</div>
-				<!-- Slider por rango de vcalor de OC -->
 				<div class="col-md-6">
 					 <div class="form-group">
 						<label class="control-label">Rango de monto de venta <a href="#" class="btn btn-primary btn-xs btn-limpiar js-limpiar-busqueda" data-tipo="monto">Limpiar</a></label>
@@ -96,34 +88,12 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-6">
-					<label class="control-label">Tipo de compra</label>
-					<div class="row">
-						<!-- Check de OC reserva -->
-						<div class="col-md-3">
-							<label class="switch switch-small">
-								<?= $this->Form->checkbox('reserva', array('value' => 1, 'checked' => ( ! empty($filtros['filtro']['reserva']) ? true : false))); ?>
-								<span></span>
-							</label>
-							<label for="CompraReserva" class="control-label text-switch" style="cursor: pointer;"> Reserva</label>
-						</div>
-						<!-- Check de textos por colegio -->
-						<div class="col-md-4">
-							<label class="switch switch-small">
-								<?= $this->Form->checkbox('lista', array('value' => 1, 'checked' => ( ! empty($filtros['filtro']['lista']) ? true : false))); ?>
-								<span></span>
-							</label>
-							<label for="CompraLista" class="control-label text-switch" style="cursor: pointer;"> Textos por Colegio</label>
-						</div>
-					</div>
-				</div>
+				<div class="col-md-6"></div>
 				<div class="col-md-6">
 					<label class="control-label">&nbsp;</label>
 					<div class="form-group" style="text-align: right;">
 						<button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
-						<!-- Boton exportar excel -->
 						<?= $this->Html->link('<i class="fa fa-file-excel-o"></i> Exportar', array('action' => 'excel') + $filtros, array('class' => 'btn btn-success', 'escape' => false)); ?>
-						<!-- Boton limpiar -->
 						<?= $this->Html->link('<i class="fa fa-repeat"></i> Limpiar', array('action' => 'index'), array('class' => 'btn btn-danger', 'escape' => false)); ?>
 					</div>
 				</div>

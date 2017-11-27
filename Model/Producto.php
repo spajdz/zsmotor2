@@ -11,25 +11,26 @@ class Producto extends AppModel
 	 * BEHAVIORS
 	 */
 	var $actsAs			= array(
-		/**
-		 * IMAGE UPLOAD
-		 */
-		/*
-		'Image'		=> array(
-			'fields'	=> array(
-				'imagen'	=> array(
-					'versions'	=> array(
-						array(
-							'prefix'	=> 'mini',
-							'width'		=> 100,
-							'height'	=> 100,
-							'crop'		=> true
-						)
-					)
-				)
-			)
-		)
-		*/
+		'Image'     => array(
+            'fields'    => array(
+                'foto'  => array(
+                    'versions'  => array(
+                        array(
+                            'prefix'    => 'mini',
+                            'width'     => 100,
+                            'height'    => 100,
+                            'crop'      => true
+                        ),
+                        array(
+                            'prefix'    => 'interna',
+                            'width'     => 248,
+                            'height'    => 248,
+                            'crop'      => true
+                        )
+                    ) 
+                )
+            )
+        )
 	);
 
 	/**
@@ -40,70 +41,36 @@ class Producto extends AppModel
 			'notBlank' => array(
 				'rule'			=> array('notBlank'),
 				'last'			=> true,
-				//'message'		=> 'Mensaje de validación personalizado',
-				//'allowEmpty'	=> true,
-				//'required'		=> false,
-				//'on'			=> 'update', // Solo valida en operaciones de 'create' o 'update'
 			),
 		),
 		'nombre' => array(
 			'notBlank' => array(
 				'rule'			=> array('notBlank'),
 				'last'			=> true,
-				//'message'		=> 'Mensaje de validación personalizado',
-				//'allowEmpty'	=> true,
-				//'required'		=> false,
-				//'on'			=> 'update', // Solo valida en operaciones de 'create' o 'update'
 			),
 		),
 		'slug' => array(
 			'notBlank' => array(
 				'rule'			=> array('notBlank'),
 				'last'			=> true,
-				//'message'		=> 'Mensaje de validación personalizado',
-				//'allowEmpty'	=> true,
-				//'required'		=> false,
-				//'on'			=> 'update', // Solo valida en operaciones de 'create' o 'update'
 			),
 		),
 		'stock' => array(
 			'numeric' => array(
 				'rule'			=> array('numeric'),
 				'last'			=> true,
-				//'message'		=> 'Mensaje de validación personalizado',
-				//'allowEmpty'	=> true,
-				//'required'		=> false,
-				//'on'			=> 'update', // Solo valida en operaciones de 'create' o 'update'
 			),
 		),
-		// 'aro' => array(
-		// 	'numeric' => array(
-		// 		'rule'			=> array('numeric'),
-		// 		'last'			=> true,
-		// 		//'message'		=> 'Mensaje de validación personalizado',
-		// 		//'allowEmpty'	=> true,
-		// 		//'required'		=> false,
-		// 		//'on'			=> 'update', // Solo valida en operaciones de 'create' o 'update'
-		// 	),
-		// ),
 		'fecha_modificacion' => array(
 			'date' => array(
 				'rule'			=> array('date'),
 				'last'			=> true,
-				//'message'		=> 'Mensaje de validación personalizado',
-				//'allowEmpty'	=> true,
-				//'required'		=> false,
-				//'on'			=> 'update', // Solo valida en operaciones de 'create' o 'update'
 			),
 		),
 		'hora_modificacion' => array(
 			'time' => array(
 				'rule'			=> array('time'),
 				'last'			=> true,
-				//'message'		=> 'Mensaje de validación personalizado',
-				//'allowEmpty'	=> true,
-				//'required'		=> false,
-				//'on'			=> 'update', // Solo valida en operaciones de 'create' o 'update'
 			),
 		),
 	);
@@ -118,13 +85,6 @@ class Producto extends AppModel
 			'conditions'			=> '',
 			'fields'				=> '',
 			'order'					=> '',
-			/*
-			'counterCache'			=> array(
-				'producto_activo_count'			=> array('Producto.activo' => true),
-				'producto_inactivo_count'			=> array('Producto.activo' => false)
-			),
-			*/
-			//'counterScope'			=> array('Asociado.modelo' => 'Categoria')
 		),
 		'Marca' => array(
 			'className'				=> 'Marca',
@@ -132,13 +92,6 @@ class Producto extends AppModel
 			'conditions'			=> '',
 			'fields'				=> '',
 			'order'					=> '',
-			/*
-			'counterCache'			=> array(
-				'producto_activo_count'			=> array('Producto.activo' => true),
-				'producto_inactivo_count'			=> array('Producto.activo' => false)
-			),
-			*/
-			//'counterScope'			=> array('Asociado.modelo' => 'Marca')
 		)
 	);
 	public $hasMany = array(
@@ -156,4 +109,76 @@ class Producto extends AppModel
 			'counterQuery'			=> ''
 		)
 	);
+
+	public function condicionesFiltros($filtros = null)
+	{
+		$condiciones		= array();
+
+		$condiciones['Producto.precio_publico >'] = 10;
+		
+		if (!SessionComponent::check('Auth.Administrador'))
+		{
+			$condiciones['Producto.activo'] = '1';
+		}
+
+		if (!empty($filtros)){ 
+			if((Router::getParam('prefix', true))=='admin'){
+				if(!empty( $filtros['filtro']['buscar'])){
+					$condiciones['Producto.sku like'] = '%'.$filtros['filtro']['buscar'].'%';
+				}
+				if(!empty( $filtros['filtro']['categoria_id'])){
+					if( in_array(3, $filtros['filtro']['categoria_id'])){
+						$condiciones['NOT']['Producto.categoria_id'] =array(1,2) ;
+					}else{
+						$condiciones['Producto.categoria_id '] =$filtros['filtro']['categoria_id'] ;
+					}
+				} 
+
+				if(!empty( $filtros['filtro']['marca'])){
+					$condiciones['Producto.marca_id'] = $filtros['filtro']['marca'];
+				}
+					
+				if(! empty($filtros['sort'])){
+					if($filtros['sort']=='activo'){
+						if($filtros['direction']=='desc'){
+							$condiciones['Producto.activo'] = '1';
+						}else{
+							$condiciones['Producto.activo'] = '0';
+						}
+					}
+				}
+			}else{
+				$condiciones['Marca.activo'] = 1; 
+				if(!empty($filtros['tipo'])){
+					$condiciones['Producto.categoria_id !='] = array(1,2);
+				}
+				if(!empty( $filtros['ProductoMarcaId'])){
+					$condiciones['Producto.marca_id'] = $filtros['ProductoMarcaId'];
+				}
+				if(!empty( $filtros['ProductoId'])){
+					$condiciones['Producto.id'] = $filtros['ProductoId'];
+				}
+				if(!empty( $filtros['MarcaId'])){
+					$condiciones['Producto.marca_id'] = $filtros['MarcaId'];
+					unset($condiciones['Producto.categoria_id']);
+				}
+				if(!empty( $filtros['texto'])){
+					$filtros['texto'] = trim($filtros['texto']);	
+					$condiciones['OR']['Producto.nombre like'] = '%'.str_replace(' ', '%', $filtros['texto']) .'%';
+					$condiciones['OR']['Producto.descripcion like'] = '%'.str_replace(' ', '%', $filtros['texto']) .'%';
+					$condiciones['OR']['Producto.sku like'] = '%'.str_replace(' ', '%', $filtros['texto']) .'%';  
+				}
+				if(!empty( $filtros['filtro'])){
+					$condiciones['OR']['Producto.nombre like'] = '%'.$filtros['filtro'].'%';
+					$condiciones['OR']['Producto.descripcion like'] = '%'.$filtros['filtro'].'%';
+				}
+			}
+		}
+ 
+		if ( ! empty($condiciones) )
+		{
+			return $condiciones;
+		} 
+		return false;
+	}
 }

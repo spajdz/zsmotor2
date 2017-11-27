@@ -1,12 +1,11 @@
 <?php
 App::uses('AppModel', 'Model');
-App::uses('String', 'Utility');
 class Sucursal extends AppModel
 {
 	/**
 	 * CONFIGURACION DB
 	 */
-
+	public $displayField	= 'nombre';
 	/**
 	 * BEHAVIORS
 	 */
@@ -14,195 +13,108 @@ class Sucursal extends AppModel
 		/**
 		 * IMAGE UPLOAD
 		 */
-		/*
+		
 		'Image'		=> array(
 			'fields'	=> array(
 				'imagen'	=> array(
 					'versions'	=> array(
 						array(
 							'prefix'	=> 'mini',
-							'width'		=> 100,
-							'height'	=> 100,
+							'width'		=> 390,
+							'height'	=> 203,
+							'crop'		=> true
+						),
+						array(
+							'prefix'	=> 'interna',
+							'width'		=> 790,
+							'height'	=> 412,
 							'crop'		=> true
 						)
 					)
 				)
 			)
 		)
-		*/
+		
 	);
-
 	/**
 	 * VALIDACIONES
 	 */
 	public $validate = array(
-		'KOSU' => array(
+		'nombre' => array(
 			'notBlank' => array(
 				'rule'			=> array('notBlank'),
 				'last'			=> true,
-				//'message'		=> 'Mensaje de validación personalizado',
-				//'allowEmpty'	=> true,
-				//'required'		=> false,
-				//'on'			=> 'update', // Solo valida en operaciones de 'create' o 'update'
 			),
 		),
 	);
-
 	/**
 	 * ASOCIACIONES
 	 */
 	public $belongsTo = array(
-		'Administrador' => array(
-			'className'				=> 'Administrador',
-			'foreignKey'			=> 'administrador_id',
+		'TipoSucursal' => array(
+			'className'				=> 'TipoSucursal',
+			'foreignKey'			=> 'tipo_sucursal_id',
 			'conditions'			=> '',
 			'fields'				=> '',
 			'order'					=> '',
-			'counterCache'			=> false,
-			'counterScope'			=> array('Asociado.modelo' => 'Administrador')
+			'counterCache'			=> true,
+			//'counterScope'			=> array('Asociado.modelo' => 'Producto')
 		)
 	);
+	public $hasMany = array(
+		'Encargado' => array(
+			'className'				=> 'Encargado',
+			'foreignKey'			=> 'sucursal_id',
+			'dependent'				=> false,
+			'conditions'			=> '',
+			'fields'				=> '',
+			'order'					=> '',
+			'limit'					=> '',
+			'offset'				=> '',
+			'exclusive'				=> '',
+			'finderQuery'			=> '',
+			'counterQuery'			=> ''
+		),
+		'Sucursal' => array(
+			'className'				=> 'Sucursal',
+			'foreignKey'			=> 'sucursal_id',
+			'dependent'				=> false,
+			'conditions'			=> '',
+			'fields'				=> '',
+			'order'					=> '',
+			'limit'					=> '',
+			'offset'				=> '',
+			'exclusive'				=> '',
+			'finderQuery'			=> '',
+			'counterQuery'			=> ''
+		)
+	);
+	public $hasAndBelongsToMany = array(
+		'Servicio' => array(
 
+			'className'				=> 'Servicio',
+			'joinTable'				=> 'servicios_sucursales',
+			'foreignKey'			=> 'sucursal_id',
+			'associationForeignKey'	=> 'servicio_id',
+			'unique'				=> true,
+			'conditions'			=> '',
+			'fields'				=> '',
+			'order'					=> '',
+			'limit'					=> '',
+			'offset'				=> '',
+			'finderQuery'			=> '',
+			'deleteQuery'			=> '',
+			'insertQuery'			=> '' 
+		)
+	);	
 
-	/**
-	 * Obtiene el listado de sucursales para el backend
-	 */
-	public function getSucursalesAdmin()
-	{
-		$this->Query		= ClassRegistry::init('Query');
-		$sucursales			= array();
-
-		/**
-		 * Obtiene las querys a ejecutar
-		 */
-		$carga				= $this->Query->getProductiva('SUCURSALES_CARGA');
-		$lista				= $this->Query->getProductiva('SUCURSALES_LISTA');
-		if ( $lista )
-		{
-			/**
-			 * Ejecuta las querys
-			 */
-			try
-			{
-				$this->usarDsBooks();
-				$this->query($carga['Query']['query']);
-				$sucursales		= $this->query($lista['Query']['query']);
-				$this->usarDsLocal();
-			}
-			catch ( PDOException $error )
-			{
-				// TODO: Informar error de categorias
-			}
-		}
-
-		foreach ( $sucursales as &$sucursal )
-		{
-			$sucursal[$this->alias]		= $sucursal[0];
-			unset($sucursal[0]);
-		}
-
-		return $sucursales;
-	}
-
-
-	/**
-	 * Obtiene el listado de sucursales para la pagina publica
-	 */
-	public function getSucursales()
-	{
-		$this->Query		= ClassRegistry::init('Query');
-		$sucursales			= array();
-
-		/**
-		 * Obtiene las querys a ejecutar
-		 */
-		$lista				= $this->Query->getProductiva('SUCURSALES_LISTA_PUBLICA');
-		if ( $lista )
-		{
-			/**
-			 * Ejecuta las querys
-			 */
-			try
-			{
-				$this->usarDsBooks();
-				$sucursales		= $this->query($lista['Query']['query']);
-				$this->usarDsLocal();
-			}
-			catch ( PDOException $error )
-			{
-				// TODO: Informar error de categorias
-			}
-		}
-
-		foreach ( $sucursales as &$sucursal )
-		{
-			$sucursal[$this->alias]		= $sucursal[0];
-			unset($sucursal[0]);
-		}
-
-		return $sucursales;
-	}
-
-	/**
-	 * Obtiene los detalles de una sucursal especifica
-	 */
-	public function getSucursal($slug = null)
-	{
-		if ( ! $slug )
-		{
-			return false;
-		}
-
-		$this->Query		= ClassRegistry::init('Query');
-		$sucursal			= array();
-
-		/**
-		 * Obtiene las querys a ejecutar
-		 */
-		$detalles			= $this->Query->getProductiva('SUCURSALES_VER');
-		if ( $detalles )
-		{
-			/**
-			 * Ejecuta las querys
-			 */
-			try
-			{
-				$this->usarDsBooks();
-				$sql			= String::insert($detalles['Query']['query'], array('SLUG' => $slug));
-				$sucursal		= $this->query($sql);
-				$this->usarDsLocal();
-			}
-			catch ( PDOException $error )
-			{
-				// TODO: Informar error de categorias
-			}
-		}
-
-		if ( $sucursal )
-		{
-			$sucursal['Sucursal'] = $sucursal[0][0];
-			unset($sucursal[0]);
-		}
-
-		return $sucursal;
-	}
-
-
-	/**
-	 * CALLBACKS
-	 */
 	public function beforeSave($options = array())
 	{
 		parent::beforeSave($options);
 
-		/**
-		 * Actualiza el usuario que modifica la query
-		 */
-		if ( ! isset($this->data[$this->alias]['administrador_id']) )
-		{
-			$this->data[$this->alias]['administrador_id']		= AuthComponent::user('id');
-		}
-
+		$this->data[$this->alias]['created']	=  date('Y-m-d H:i:s');
+		$this->data[$this->alias]['modified']	=  date('Y-m-d H:i:s');
+		
 		return true;
 	}
 }

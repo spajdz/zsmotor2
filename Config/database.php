@@ -6,7 +6,7 @@ class DATABASE_CONFIG
 		'persistent'	=> false,
 		'host'			=> 'localhost',
 		'login'			=> 'root',
-		'password'		=> '123456',
+		'password'		=> '',
 		'database'		=> 'zsmotor_sitiov2',
 		'prefix'		=> 'sitio_',
 		'encoding'		=> 'utf8'

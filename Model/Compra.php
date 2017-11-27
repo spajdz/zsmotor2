@@ -11,10 +11,7 @@ class Compra extends AppModel
 	var $rechazo				= array(2, 3);
 	var $pagado					= 4;
 
-	/**
-	 * CONFIGURACION DB
-	 */
-
+	
 	/**
 	 * BEHAVIORS
 	 */
@@ -28,70 +25,44 @@ class Compra extends AppModel
 			'validateForeignKey' => array(
 				'rule'			=> array('validateForeignKey'),
 				'last'			=> true,
-				//'message'		=> 'Mensaje de validación personalizado',
-				//'allowEmpty'	=> true,
-				//'required'		=> false,
-				//'on'			=> 'update', // Solo valida en operaciones de 'create' o 'update'
 			),
 		),
 		'estado_compra_id' => array(
 			'validateForeignKey' => array(
 				'rule'			=> array('validateForeignKey'),
 				'last'			=> true,
-				//'message'		=> 'Mensaje de validación personalizado',
-				//'allowEmpty'	=> true,
-				//'required'		=> false,
-				//'on'			=> 'update', // Solo valida en operaciones de 'create' o 'update'
 			),
 		),
 		'direccion_id' => array(
 			'validateForeignKey' => array(
 				'rule'			=> array('validateForeignKey'),
 				'last'			=> true,
-				//'message'		=> 'Mensaje de validación personalizado',
 				'allowEmpty'	=> true,
-				//'required'		=> false,
-				//'on'			=> 'update', // Solo valida en operaciones de 'create' o 'update'
 			),
 		),
 		'subtotal' => array(
 			'numeric' => array(
 				'rule'			=> array('numeric'),
 				'last'			=> true,
-				//'message'		=> 'Mensaje de validación personalizado',
-				//'allowEmpty'	=> true,
-				//'required'		=> false,
-				//'on'			=> 'update', // Solo valida en operaciones de 'create' o 'update'
 			),
 		),
 		'valor_despacho' => array(
 			'numeric' => array(
 				'rule'			=> array('numeric'),
 				'last'			=> true,
-				//'message'		=> 'Mensaje de validación personalizado',
-				//'allowEmpty'	=> true,
-				//'required'		=> false,
-				//'on'			=> 'update', // Solo valida en operaciones de 'create' o 'update'
 			),
 		),
 		'total' => array(
 			'numeric' => array(
 				'rule'			=> array('numeric'),
 				'last'			=> true,
-				//'message'		=> 'Mensaje de validación personalizado',
-				//'allowEmpty'	=> true,
-				//'required'		=> false,
-				//'on'			=> 'update', // Solo valida en operaciones de 'create' o 'update'
 			),
 		),
 		'peso' => array(
 			'numeric' => array(
 				'rule'			=> array('numeric'),
 				'last'			=> true,
-				//'message'		=> 'Mensaje de validación personalizado',
 				'allowEmpty'	=> true,
-				//'required'		=> false,
-				//'on'			=> 'update', // Solo valida en operaciones de 'create' o 'update'
 			),
 		),
 	);
@@ -636,13 +607,6 @@ class Compra extends AppModel
 					)
 				));
 			}
-			// FILTRO POR RESERVA Y LISTA
-			array_push($condiciones, array(
-				'AND'	=> array(
-					'Compra.reserva'	=> ( ! empty($filtros['filtro']['reserva']) ? true : false),
-					'Compra.lista'		=> ( ! empty($filtros['filtro']['lista']) ? true : false)
-				)
-			));
 		}
 		if ( ! empty($condiciones) )
 		{

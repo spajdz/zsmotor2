@@ -63,6 +63,56 @@
 				</li>
 			</ul>
 		</li>
+				<li class="xn-openable <?= (
+			(
+				$this->Html->menuActivo(array('controller' => 'clientes')) ||
+				$this->Html->menuActivo(array('controller' => 'noticias', 'action' => 'index')) ||
+				$this->Html->menuActivo(array('controller' => 'servicios')) ||
+				$this->Html->menuActivo(array('controller' => 'configuraciones')) ||
+				$this->Html->menuActivo(array('controller' => 'encargados')) ||
+				$this->Html->menuActivo(array('controller' => 'sucursales')) 
+			)
+			? 'active' : ''
+		); ?>">
+			<a href="#"><span class="fa fa-th-list"></span> <span class="xn-text">Configuracion</span></a>
+			<ul>
+				<li class="<?= ($this->Html->menuActivo(array('controller' => 'clientes')) ? 'active' : ''); ?>">
+					<?= $this->Html->link(
+						'<span class="glyphicon glyphicon-tags"></span> <span class="xn-text">Clientes</span>',
+						array('controller' => 'clientes', 'action' => 'index'),
+						array('escape' => false)
+					); ?>
+				</li>
+				<li class="<?= ($this->Html->menuActivo(array('controller' => 'noticias', 'action' => 'index')) ? 'active' : ''); ?>">
+					<?= $this->Html->link(
+						'<span class="glyphicon glyphicon-barcode"></span> <span class="xn-text">Noticias</span>',
+						array('controller' => 'noticias', 'action' => 'index'),
+						array('escape' => false)
+					); ?>
+				</li>
+				<li class="<?= ($this->Html->menuActivo(array('controller' => 'servicios')) ? 'active' : ''); ?>">
+					<?= $this->Html->link(
+						'<span class="glyphicon glyphicon-barcode"></span> <span class="xn-text">Servicios</span>',
+						array('controller' => 'servicios', 'action' => 'index'),
+						array('escape' => false)
+					); ?>
+				</li>
+				<li class="<?= ($this->Html->menuActivo(array('controller' => 'sucursales')) ? 'active' : ''); ?>">
+					<?= $this->Html->link(
+						'<span class="glyphicon glyphicon-barcode"></span> <span class="xn-text">Sucursales</span>',
+						array('controller' => 'sucursales', 'action' => 'index'),
+						array('escape' => false)
+					); ?>
+				</li>
+				<li class="<?= ($this->Html->menuActivo(array('controller' => 'encargados')) ? 'active' : ''); ?>">
+					<?= $this->Html->link(
+						'<span class="glyphicon glyphicon-barcode"></span> <span class="xn-text">Encargados</span>',
+						array('controller' => 'encargados', 'action' => 'index'),
+						array('escape' => false)
+					); ?>
+				</li>
+			</ul>
+		</li>
 		<li class="xn-title">Ventas</li>
 		<!-- Listado de ordenes de compra -->
 		<? if ( permisosPerfilBackend($perfil_usuario, $permiso_usuario, 'compras') ) : ?>

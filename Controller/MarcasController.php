@@ -4,11 +4,7 @@ class MarcasController extends AppController
 {
 	public function admin_index()
 	{
-		$this->paginate		= array(
-			'recursive'			=> 0
-		);
-		$marcas	= $this->paginate();
-		// prx($this->Marca->getDataSource()->getLog(false, false));
+		$marcas = $this->Marca->find('all', array('conditions' => array('nombre != ' => '')));
 		$this->set(compact('marcas'));
 	}
 
@@ -80,7 +76,10 @@ class MarcasController extends AppController
 	public function admin_exportar()
 	{
 		$datos			= $this->Marca->find('all', array(
-			'recursive'				=> -1
+			'recursive'	=> -1,
+			'conditios'	=> array(
+				'nombre != ' => ''
+			)
 		));
 		$campos			= array_keys($this->Marca->_schema);
 		$modelo			= $this->Marca->alias;
@@ -97,7 +96,7 @@ class MarcasController extends AppController
 			$this->redirect(array('action' => 'index'));
 		}
 
-		if ( $this->Marca->saveField('activo', true) )
+		if ( $this->Marca->save(array('activo' => true, 'eliminado' => false)) )
 		{
 			$this->Session->setFlash('Registro activado correctamente.', null, array(), 'success');
 			$this->redirect(array('action' => 'index'));
@@ -115,7 +114,7 @@ class MarcasController extends AppController
 			$this->redirect(array('action' => 'index'));
 		}
 
-		if ( $this->Marca->saveField('activo', false) )
+		if ( $this->Marca->save(array('activo' => false, 'eliminado' => true)) )
 		{
 			$this->Session->setFlash('Registro desactivado correctamente.', null, array(), 'success');
 			$this->redirect(array('action' => 'index'));

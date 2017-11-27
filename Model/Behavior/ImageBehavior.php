@@ -100,18 +100,36 @@ class ImageBehavior extends ModelBehavior
 	public function beforeSave(Model $model, $options = array())
 	{
 		$tempData	= array();
+		$this->fakeUpload	= (! empty($model->fakeUpload));
+
 		extract($this->settings[$model->name]);
 
 		foreach ( $fields as $key => $value )
 		{
 			$field		= (is_numeric($key) ? $value : $key);
-			if ( isset($model->data[$model->name][$field]) )
-			{
+
+			if(!empty($model->data[$model->name][$field])){
+				if(!empty($model->data[$model->name][$field]['tmp_name'])){
+			        if($model->data[$model->name][$field]['tmp_name']==""){
+			            unset($model->data[$model->name][$field]);
+			        }
+			    }
+			}
+
+			if ( isset($model->data[$model->name][$field]) && ! empty($model->data[$model->name][$field]['name']) )
+			{	
+				$model->data[$model->name][$field]['name'] = strtolower($model->data[$model->name][$field]['name']);
 				$ext		= explode('.', $model->data[$model->name][$field]['name']);
 				$ext		= end($ext);
 				// @TODO - Parametrizar renombramiento de archivo via config de usuario
-				$model->data[$model->name][$field]['name'] = preg_replace('/[^a-z0-9_\.]/', '', str_replace(array(' ', '-'), array('_', '_'), strtolower($model->data[$model->name][$field]['name'])));
-
+				if ( $model->alias == 'Producto' )
+				{
+					$model->data[$model->name][$field]['name'] = sprintf('%s.%s', $model->data[$model->name]['sku'], strtolower($ext));
+				}
+				else
+				{
+					$model->data[$model->name][$field]['name'] = preg_replace('/[^a-z0-9_\.]/', '', str_replace(array(' ', '-'), array('_', '_'), strtolower($model->data[$model->name][$field]['name'])));
+				}
 
 				if ( $this->__isUploadFile($model->data[$model->name][$field] ) &&
 					 $this->__isValidExtension($this->settings[$model->name]['fields'][$field]['image_types'], $model->data[$model->name][$field]) )
@@ -120,10 +138,12 @@ class ImageBehavior extends ModelBehavior
 					$model->data[$model->name][$field]	= $model->data[$model->name][$field]['name'];
 				}
 				else
+				{
 					unset($model->data[$model->name][$field]);
+				}
 			}
-		}
 
+		}
 
 		$this->runtime[$model->name]['beforeSave']	= $tempData;
 		return true;

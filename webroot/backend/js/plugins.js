@@ -206,10 +206,10 @@ $(function() {
 
     var uiElements = function(){
 
-        //Datatables
+       //Datatables
         var uiDatatable = function(){
             if($(".datatable").length > 0){
-                $(".datatable").dataTable({order:[], paging:false, language:{search:'Buscar :'}, info:false});
+                $(".datatable").dataTable();
                 $(".datatable").on('page.dt',function () {
                     onresize(100);
                 });
@@ -222,6 +222,12 @@ $(function() {
                 });
             }
         }//END Datatable
+
+        return {
+            init: function(){
+                uiDatatable();
+            }
+        }
 
         //RangeSlider // This function can be removed or cleared.
         var uiRangeSlider = function(){
@@ -475,6 +481,8 @@ $(function() {
         }
 
     }();
+
+    uiElements.init();
 
     var templatePlugins = function(){
 
