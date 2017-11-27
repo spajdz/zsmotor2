@@ -2,14 +2,6 @@
 App::uses('AppController', 'Controller');
 class CategoriasController extends AppController
 {
-	// public function admin_index()
-	// {
-	// 	$this->paginate		= array(
-	// 		'recursive'			=> 0
-	// 	);
-	// 	$categorias	= $this->paginate();
-	// 	$this->set(compact('categorias'));
-	// }
 
 	public function admin_index()
 	{
