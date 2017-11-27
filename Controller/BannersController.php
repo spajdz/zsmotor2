@@ -52,8 +52,8 @@ class BannersController extends AppController
 			}
 		}
 
-		$tipoBanners		= $this->Banner->TipoBanner->find('list');
-		$this->set(compact('tipoBanners'));
+		$paginas		= $this->Banner->Pagina->find('list');
+		$this->set(compact('paginas'));
 	}
 
 	public function admin_edit($id = null)

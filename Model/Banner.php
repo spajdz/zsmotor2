@@ -151,14 +151,14 @@ class Banner extends AppModel
 			'counterCache'			=> false,
 			'counterScope'			=> array('Asociado.modelo' => 'Administrador')
 		),
-		'TipoBanner' => array(
-			'className'				=> 'TipoBanner',
-			'foreignKey'			=> 'tipo_banner_id',
+		'Pagina' => array(
+			'className'				=> 'Pagina',
+			'foreignKey'			=> 'pagina_id',
 			'conditions'			=> '',
 			'fields'				=> '',
 			'order'					=> '',
 			'counterCache'			=> false,
-			'counterScope'			=> array('Asociado.modelo' => 'TipoBanner')
+			'counterScope'			=> array('Asociado.modelo' => 'Pagina')
 		)
 	);
 

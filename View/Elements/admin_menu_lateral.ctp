@@ -204,24 +204,24 @@
 		</li>
 		<li class="xn-openable <?= (
 				(
-					$this->Html->menuActivo(array('controller' => 'imagenes')) ||
-					$this->Html->menuActivo(array('controller' => 'imagenes', 'action' => 'cuadroshome'))
+					$this->Html->menuActivo(array('controller' => 'banners')) ||
+					$this->Html->menuActivo(array('controller' => 'banners', 'action' => 'cuadroshome'))
 				)
 				? 'active' : ''
 			); ?>">
 			<a href="#"><span class="fa fa-th-list"></span> <span class="xn-text">Imagenes/Banners</span></a>
 			<ul>
-				<li class="<?= ($this->Html->menuActivo(array('controller' => 'imagenes')) ? 'active' : ''); ?>">
+				<li class="<?= ($this->Html->menuActivo(array('controller' => 'banners')) ? 'active' : ''); ?>">
 					<?= $this->Html->link(
 						'<span class="glyphicon glyphicon-tags"></span> <span class="xn-text">Imágenes</span>',
-						array('controller' => 'imagenes'),
+						array('controller' => 'banners'),
 						array('escape' => false)
 					); ?>
 				</li>
-				<li class="<?= ($this->Html->menuActivo(array('controller' => 'imagenes', 'action' => 'cuadroshome')) ? 'active' : ''); ?>">
+				<li class="<?= ($this->Html->menuActivo(array('controller' => 'banners', 'action' => 'cuadroshome')) ? 'active' : ''); ?>">
 					<?= $this->Html->link(
 						'<span class="glyphicon glyphicon-barcode"></span> <span class="xn-text">Cuadros categorías home</span>',
-						array('controller' => 'imagenes', 'action' => 'cuadroshome'),
+						array('controller' => 'banners', 'action' => 'cuadroshome'),
 						array('escape' => false)
 					); ?>
 				</li>
