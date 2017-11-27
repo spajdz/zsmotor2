@@ -32,6 +32,8 @@ class ProductosController extends AppController
 		}else{
 			$categoria = 'home';
 		}
+
+		// prx($condiciones);
 	
 		$this->paginate	= array(
 			'conditions' => $condiciones,
@@ -63,7 +65,6 @@ class ProductosController extends AppController
 		);
 		$productos	= $this->paginate();
 
-		
 
 		$this->set(compact('productos', 'categoria', 'categoria_id', 'limite'));
 	}
@@ -572,7 +573,6 @@ class ProductosController extends AppController
 					if(!$ws->fault && !$ws->getError()){
 						if(!empty($productos['Ws_ListarProductosXpaginaResult']['diffgram'])){
 							foreach ($productos['Ws_ListarProductosXpaginaResult']['diffgram']['NewDataSet']['Table'] as $producto) {
-								// prx($producto['DESCRIP']);
 								$sku			= trim($producto['CODIGO']);
 								$nombre		 = trim(ucwords(mb_strtolower(utf8_encode($producto['DESCRIPCION']))));
 								$slugdescripcion = str_replace('/', '-', $nombre.' '.$sku);

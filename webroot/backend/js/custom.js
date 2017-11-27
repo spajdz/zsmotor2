@@ -546,12 +546,12 @@ jQuery(document).ready(function($)
 
 });
 
- /**
-   * Funcion que permite chequear o no los difertenes modulo asignados a un modulo padre
-   * @type {modulo}
-   */
-  function checkboxPerfil( modulo )
-  {
+	/**
+	   * Funcion que permite chequear o no los difertenes modulo asignados a un modulo padre
+	   * @type {modulo}
+	   */
+   function checkboxPerfil( modulo )
+   {
        if($(".js-check-"+modulo+"-perfil").is(":checked"))
 		{
 			$(".ck-"+modulo+"-perfil").prop("checked", "checked");
@@ -562,6 +562,24 @@ jQuery(document).ready(function($)
 			$(".ck-"+modulo+"-perfil").removeAttr("checked");
 			$(".check-"+modulo).hide('slow');
 		}
-  }
+   }
+
+   function MarcarcategoriasTodas(){
+		if ($("#marcar-categorias-todas").is(':checked')) {
+			$(".accordion-categorias").find("input[type=checkbox]").prop('checked', true);
+		}
+		else {
+			$(".accordion-categorias").find("input[type=checkbox]").prop('checked', false);
+		}
+	}
+
+	function MarcarcategoriasPorCategoriaPadre(id) {
+		if ($("#marcar-categorias-" + id).is(':checked')){
+			$("#categorias-hijas-" + id).find("input[type=checkbox]").prop('checked', true);
+		}
+		else {
+			$("#categorias-hijas-" + id).find("input[type=checkbox]").prop('checked', false);
+		}
+	}
 
 //]]>

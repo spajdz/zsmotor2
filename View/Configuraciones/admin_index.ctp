@@ -15,12 +15,10 @@
 				<table class="table">
 					<thead>
 						<tr class="sort">
-							<th><?= $this->Paginator->sort('nombre', null, array('title' => 'Haz click para ordernar por este criterio')); ?></th>
+							<th><?= $this->Paginator->sort('identificador', null, array('title' => 'Haz click para ordernar por este criterio')); ?></th>
 							<th><?= $this->Paginator->sort('valor', null, array('title' => 'Haz click para ordernar por este criterio')); ?></th>
 							<th><?= $this->Paginator->sort('descripcion', 'Descripción', array('title' => 'Haz click para ordernar por este criterio')); ?></th>
 							<th><?= $this->Paginator->sort('administrador_id', 'Última modificación', array('title' => 'Haz click para ordernar por este criterio')); ?></th>
-							<th><?= $this->Paginator->sort('fecha_inicio', null, array('title' => 'Haz click para ordernar por este criterio')); ?></th>
-							<th><?= $this->Paginator->sort('fecha_fin', null, array('title' => 'Haz click para ordernar por este criterio')); ?></th>
 							<th><?= $this->Paginator->sort('activo', null, array('title' => 'Haz click para ordernar por este criterio')); ?></th>
 							<th>Acciones</th>
 						</tr>
@@ -28,12 +26,10 @@
 					<tbody>
 						<? foreach ( $configuraciones as $configuracion ) : ?>
 						<tr>
-							<td><?= h($configuracion['Configuracion']['nombre']); ?>&nbsp;</td>
+							<td><?= h($configuracion['Configuracion']['identificador']); ?>&nbsp;</td>
 							<td><?= h($configuracion['Configuracion']['valor']); ?>&nbsp;</td>
 							<td><?= h($configuracion['Configuracion']['descripcion']); ?>&nbsp;</td>
 							<td><?= h($configuracion['Administrador']['nombre']); ?>&nbsp;</td>
-							<td><?= h($configuracion['Configuracion']['fecha_inicio']); ?>&nbsp;</td>
-							<td><?= h($configuracion['Configuracion']['fecha_fin']); ?>&nbsp;</td>
 							<td><?= ($configuracion['Configuracion']['activo'] ? '<i class="fa fa-check"></i>' : '<i class="fa fa-remove"></i>'); ?>&nbsp;</td>
 							<td>
 								<?= $this->Html->link('<i class="fa fa-edit"></i> Editar', array('action' => 'edit', $configuracion['Configuracion']['id']), array('class' => 'btn btn-mini btn-info', 'rel' => 'tooltip', 'title' => 'Editar este registro', 'escape' => false)); ?>

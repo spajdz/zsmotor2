@@ -77,6 +77,8 @@ class Configuracion extends AppModel
 		{
 			$this->data[$this->name]['administrador_id']		= AuthComponent::user('id');
 		}
+		$this->data[$this->alias]['created']	=  date('Y-m-d H:i:s');
+		$this->data[$this->alias]['modified']	=  date('Y-m-d H:i:s');
 	}
 
 	public function getProductiva($identificador = null)
@@ -88,4 +90,5 @@ class Configuracion extends AppModel
 			)
 		));
 	}
+
 }

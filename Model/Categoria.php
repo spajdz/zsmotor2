@@ -257,6 +257,7 @@ class Categoria extends AppModel
 			'conditions'		=> array(
 				"Categoria.parent_id"	=> $parent_id,
 				'Categoria.activo'		=> 1,
+				'Categoria.menu'		=> 1,
 			),
 			'fields'			=> array(
 				'Categoria.id',
@@ -269,5 +270,15 @@ class Categoria extends AppModel
 			),
 			'callbacks' 		=> false
 		));
+	}
+
+	public function beforeSave($options = array())
+	{
+		parent::beforeSave($options);
+
+		$this->data[$this->alias]['created']	=  date('Y-m-d H:i:s');
+		$this->data[$this->alias]['modified']	=  date('Y-m-d H:i:s');
+		
+		return true;
 	}
 }

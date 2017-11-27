@@ -202,6 +202,42 @@ class UsuariosController extends AppController
 		$this->set(compact('usuario'));
 	}
 
+	public function admin_add()
+	{
+		if ( $this->request->is('post') )
+		{
+			$this->Usuario->create();
+			if ( $this->Usuario->save($this->request->data) )
+			{
+				$this->Session->setFlash('Registro agregado correctamente.', null, array(), 'success');
+				$this->redirect(array('action' => 'index'));
+			}
+			else
+			{
+				$this->Session->setFlash('Error al guardar el registro. Por favor intenta nuevamente.', null, array(), 'danger');
+			}
+		}
+
+		$usuarioTipos = $this->Usuario->TipoUsuario->find (
+			'list',
+			array (
+				'conditions' => array(
+					'TipoUsuario.activo' => 1
+				)
+			)
+		);
+		$tipoPagos = $this->Usuario->TipoPago->find (
+			'list',
+			array (
+				'conditions' => array(
+					'TipoPago.activo' => 1
+				)
+			)
+		);
+
+		$this->set(compact('usuarioTipos', 'tipoPagos'));
+	}
+
 	public function admin_edit($id = null)
 	{
 		if ( ! $this->Usuario->exists($id) )
@@ -249,57 +285,11 @@ class UsuariosController extends AppController
 
 	public function admin_index()
 	{
-
-		/**
-		 * Inicio busqueda
-		 */
-		if ( $this->request->is('post') )
-		{
-			$busqueda		= array();
-			extract($this->request->data['Usuario']);
-
-			// Información de busqueda libre
-			if ( ! empty($libre) )
-			{
-				$busqueda['buscar']				= $libre;
-			}
-			// Informacion de busqueda por tipo de usuario
-			if ( ! empty($tipo_usuario) )
-			{
-				$busqueda['tipo_usuario']				= $tipo_usuario;
-			}
-
-			$this->redirect(array('filtro' => $busqueda));
-
-		}
-
-		/**
-		 * Paginacion + Filtros
-		 * Se declara la paginacion con sus respectivos atributos, pero dejando
-		 * las condiciones vacias
-		 */
-		$paginacion			= array(
-			'recursive'			=> 0,
-			'conditions'		=> array(),
-			'order'				=> array('Usuario.nombre' => 'ASC'),
-			'contain'			=> array('TipoUsuario')
+		$this->paginate		= array(
+			'recursive'			=> 0
 		);
-		/** Se obtienen parametros de tipo 'named' */
-		$filtros			=	$this->params['named'];
-		$condicionFiltros	=	$this->Usuario->condicionesFiltros($filtros);
-		if ( ! empty($condicionFiltros) )
-		{
-			$paginacion['conditions']	= $condicionFiltros;
-		}
-
-		$this->paginate		= $paginacion;
-		$usuarios			= $this->paginate();
-
-		$tipoUsuario		=	$this->Usuario->TipoUsuario->find('list', array(
-			'TipoUsuario.activo'	=> true
-		));
-
-		$this->set(compact('filtros', 'usuarios','tipoUsuario'));
+		$usuarios	= $this->paginate();
+		$this->set(compact('usuarios'));
 	}
 
 }

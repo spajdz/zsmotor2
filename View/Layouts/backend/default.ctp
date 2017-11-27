@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+	<!DOCTYPE html>
 <html lang="es">
 	<head>
 		<title>Zs Motor | Administración</title>
@@ -10,7 +10,7 @@
 			'/backend/css/theme-default',
 			'/backend/css/custom',
 			'/backend/css/ion/ion.rangeSlider',
-			'/backend/css/ion/ion.rangeSlider.skinFlat',
+			'/backend/css/ion/ion.rangeSlider.skinFlat',	
 			'/backend/css/cropper/cropper.min.css',
 			'/backend/css/jstree/jstree.min'
 		)); ?>

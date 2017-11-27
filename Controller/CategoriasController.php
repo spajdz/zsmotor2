@@ -5,41 +5,23 @@ class CategoriasController extends AppController
 
 	public function admin_index()
 	{
-	
         if ( $this->request->is('post') )
         {
-        	//LIMPIIO EL MENU 
-			$categoriasSeleccionadas = $this->Categoria->find('list',array(
-					'fields'=>array('id'),
-					'conditions'=>array('Categoria.menu <> 0')
-				)
-			);
-	        $categoriasChangeMenu = array();
-	        $i = 0;
-	        foreach ($categoriasSeleccionadas as $key => $value) {
-	        	# code...
-	        	$categoriasChangeMenu[$i]['Categoria']['id'] = $value;
-	        	$categoriasChangeMenu[$i]['Categoria']['menu'] = 0;
-	        	$i++;
-	        }
-	        $this->Categoria->saveAll($categoriasChangeMenu);
-        	//CARGO EL NUEVO MENU
-            $categoriasIn = array();
-	        $j = 0;
-            foreach ($this->request->data['categoriasSeleccionadas'] as $key => $value) {
-            	$categoriasIn[$j]['Categoria']['id'] = $value;
-            	$categoriasIn[$j]['Categoria']['menu'] = 1;
-	        	$j++;
+        	//Elimino todas las categorias seleccionadas anteriormente
+        	$this->Categoria->updateAll(array('Categoria.menu' => 0), array('Categoria.menu' => 1));
+
+        	//Se carga el nuevo menu
+        	$error_carga = false;
+            foreach ($this->request->data['categoriasSeleccionadas'] as $key => $value){
+            	$this->Categoria->id = $value;
+	            if (!$this->Categoria->saveField('menu',1)){
+	            	$error_carga = true;
+	            }
             }
-	        
-            if ( $this->Categoria->saveAll($categoriasIn) )
-            {
-                $this->Session->setFlash('Menu guardado correctamente.', null, array(), 'success');
-                $this->redirect(array('action' => 'index'));
-            }
-            else
-            {
-                $this->Session->setFlash('Error al guardar el Menu. Por favor intenta nuevamente.', null, array(), 'danger');
+            if(!$error_carga){
+           		$this->Session->setFlash('Menu guardado correctamente.', null, array(), 'success');
+            }else{
+                $this->Session->setFlash('Error al guardar todo el Menu. Por favor intenta nuevamente.', null, array(), 'danger');
             }
         }	
 		$categorias = $this->Categoria->find('threaded',array(
@@ -48,21 +30,15 @@ class CategoriasController extends AppController
 					,'nombre'
 					,'slug'
 					,'parent_id'
+					,'menu'
 				),
 				'conditions' => array(
-					'NOT' => array(
-						'Categoria.id' => array(1,2,3)
-					)
+					'Categoria.parent_id' => 3
 				)
 			)
 		);
-		$categoriasSeleccionadas = $this->Categoria->find('list',array(
-				'fields'=>array('id'),
-				'conditions'=>array('Categoria.menu <> 0'),
-			)
-		);
-		// prx($categorias);
-		$this->set(compact('categorias','categoriasSeleccionadas'));
+		
+		$this->set(compact('categorias'));
 	}
 	public function admin_add()
 	{
