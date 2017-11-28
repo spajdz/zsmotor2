@@ -37,20 +37,12 @@ class ContactoListener implements CakeEventListener
 			 */
 			$this->View->viewPath		= 'Emails' . DS . 'html';
 			$this->View->layoutPath		= 'Emails' . DS . 'html';
-
-			/**
-			 * Sender y staff mail
-			 */
-			$this->Configuracion		= ClassRegistry::init('Configuracion');
-			$this->sender				= $this->Configuracion->findByNombre('MAILING_CONTACTO');
-			$this->staff				= $this->Configuracion->findByNombre('MAIL_STAFF_CONTACTO');
 		}
 
-		$this->enviarEmailUsuario($evento);
-		$this->enviarEmailStaff($evento);
+		$this->enviarEmailAdministrador($evento);
 	}
 
-	public function enviarEmailUsuario(CakeEvent $evento)
+	public function enviarEmailAdministrador(CakeEvent $evento)
 	{
 		/**
 		 * Html del correo
@@ -58,22 +50,32 @@ class ContactoListener implements CakeEventListener
 		$contacto					= $evento->data;
 		$this->View->hasRendered	= false;
 		$this->View->set(compact('contacto'));
-		$html						= $this->View->render('contacto_usuario', 'default');
+
+		$vista = 'vista_correo';
+		$asunto = 'Formulario de Contacto';
+
+		if(!empty($contacto['Contacto']['tipo_contacto_id']) && $contacto['Contacto']['tipo_contacto_id'] == 3){
+			$vista = 'vista_correo_inscripcion_mayorista';
+			$asunto = 'Formulario inscripción cliente mayorista';
+		}
+
+		if( !empty($contacto['Contacto']['tipo_contacto_id']) && $contacto['Contacto']['tipo_contacto_id'] == 4){
+			$vista = 'vista_correo_consulta_producto';
+			$asunto = 'Formulario consulta producto';
+		}
+
+		$html						= $this->View->render($vista, 'default');
 
 		/**
 		 * Guarda el mail a enviar al usuario
 		 */
 		$this->Email->create();
 		$this->Email->save(array(
-			'asunto'					=> 'Contacto Web',
-			'destinatario_email'		=> (! empty($contacto['Usuario']['id']) ? $contacto['Usuario']['email'] : $contacto['Contacto']['email']),
-			'destinatario_nombre'		=> (
-												! empty($contacto['Usuario']['id']) ?
-												sprintf('%s %s %s', $contacto['Usuario']['nombre'], $contacto['Usuario']['apellido_paterno'], $contacto['Usuario']['apellido_materno']) :
-												$contacto['Contacto']['nombre']
-										   ),
-			'remitente_email'			=> $this->sender['Configuracion']['valor'],
-			'remitente_nombre'			=> $this->sender['Configuracion']['adicional'],
+			'asunto'					=> $asunto,
+			'destinatario_email'		=> 'stephanie.pinero@reach-latam.com',
+			'destinatario_nombre'		=> 'Administrador',
+			'remitente_email'			=> 'sitio@zsmotor.cl',
+			'remitente_nombre'			=> 'Zsmotor',
 			'cc'						=> null,
 			'bcc'						=> null,
 			'origen'					=> null,

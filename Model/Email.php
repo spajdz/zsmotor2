@@ -67,4 +67,14 @@ class Email extends AppModel
 			),
 		),
 	);
+
+	public function beforeSave($options = array())
+    {
+        parent::beforeSave($options);
+
+        $this->data[$this->alias]['created']    =  date('Y-m-d H:i:s');
+        $this->data[$this->alias]['modified']   =  date('Y-m-d H:i:s');
+        
+        return true;
+    }
 }

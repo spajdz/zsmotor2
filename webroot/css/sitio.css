@@ -305,7 +305,7 @@ i.icon-titulo {
   display: none;
 }
 .collapse {
-  visibility: hidden;
+  /*visibility: hidden;*/
   /* Bootstrap v3.3.0 */
 }
 .cbp-spmenu {

@@ -41,17 +41,26 @@
 								); ?>
 							</li>
 							<? if ( ! AuthComponent::user() ) : ?>
-							<li>
+							<li>	
 								<?= $this->Html->link(
 									'<i class="fa fa-user"></i> <span>Iniciar sesión</span>',
-									array('controller' => 'usuarios', 'action' => 'login'),
-									array('escape' => false, 'class' => 'bienvenido clearfix')
+									'/',
+									array('escape' => false, 'class' => 'bienvenido clearfix dropdown-toggle', 'data-toggle' => 'dropdown')
 								); ?>
-								<?= $this->Html->link(
-									'Regístrate',
-									array('controller' => 'usuarios', 'action' => 'add'),
-									array('escape' => false, 'class' => 'registrate2')
-								); ?>
+								<ul class="login dropdown-menu">
+					                <?= $this->Form->create('Usuario', array(
+					                          'url' => array('controller' => 'usuarios', 'action' => 'login'),                        
+					                          'class' => 'form-horizontal',
+					                          'inputDefaults' => array('label' => false,'div' => false)
+					                          )
+					                    ); ?>                      
+					                  <?= $this->Form->input('email', array('placeholder' => 'Email')); ?><br />
+					                  <?= $this->Form->input('clave', array('autocomplete' => 'new-password', 'type' => 'password', 'placeholder' => 'Contraseña')); ?><br/>
+					                  <?= $this->Form->button('Entrar', array('class' => 'btn btn-default', 'div' => false)); ?>                  
+					                  <?= $this->Html->link('Regístrate ', array('controller' => 'usuarios', 'action' => 'add'), array('class' => 'btn btn-default registro', 'div' => false)); ?>
+					                  <?= $this->Html->link('Recuperar contraseña', array('controller' => 'usuarios', 'action' => 'add'), array('class' => 'contra')); ?></br>                    
+					                <?= $this->Form->end(); ?>
+					            </ul>
 							</li>
 							<? else : ?>
 							<li class="dropdown">

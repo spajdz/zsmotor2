@@ -163,7 +163,6 @@ class AppController extends Controller
 				$this->set(compact('breadcrumbs'));
 			}
 
-
 			/**
 			 * Estado carro
 			 */
@@ -177,6 +176,107 @@ class AppController extends Controller
 			}
 
 			$this->set(compact('esMayorista'));
+
+			// Captura de origen
+			$utm_source			= null;
+			$utm_medium			= null;
+			$utm_campaign		= null;
+			$utm_term			= null;
+			$utm_content		= null;
+			$gclid				= null;
+			$scid				= null;
+			$origen				= '';
+
+			extract($this->request->query);
+			$origen_camp = $this->Session->read('Campaña.origen');
+
+			// Si no se tiene en sesion el origen, se define segun parametros
+			if(empty($origen_camp)){
+				if(!empty($scid)){
+					$origen = 'ReachLocal';
+				}else if(!empty($gclid)){
+					$origen = 'Campaña';
+				}else{
+					$origen = 'Orgánico';
+				}
+
+				$this->Session->write([
+				  'Campaña.origen' 	=> $origen,
+				  'Campaña.gclid' 	=> $gclid,
+				  'Campaña.scid' 	=> $scid,
+				]);
+
+				$parametros = Hash::normalize($this->request->query, true);
+				$this->Session->write([
+					'Campaña.parametros' 	=> $parametros
+				]);
+
+			}else{
+
+				$gclid_session 			=  $this->Session->read('Campaña.gclid');
+				$scid_session  			=  $this->Session->read('Campaña.scid');
+				$utm_source_session  	=  $this->Session->read('Campaña.parametros.utm_source');
+				$utm_medium_session  	=  $this->Session->read('Campaña.parametros.utm_medium');
+				$utm_campaign_session  	=  $this->Session->read('Campaña.parametros.utm_campaign');
+				$utm_term_session  		=  $this->Session->read('Campaña.parametros.utm_term');
+				$utm_content_session  	=  $this->Session->read('Campaña.parametros.utm_content');
+				$origen 				= $origen_camp;
+
+				if(empty($scid)){
+					$scid = $scid_session;
+				}
+
+				if(empty($gclid)){
+					$gclid = $gclid_session;
+				}
+
+				if(empty($utm_source)){
+					$utm_source = $utm_source_session;
+				}
+
+				if(empty($utm_medium)){
+					$utm_medium = $utm_medium_session;
+				}
+
+				if(empty($utm_campaign)){
+					$utm_campaign = $utm_campaign_session;
+				}
+
+				if(empty($utm_term)){
+					$utm_term = $utm_term_session;
+				}
+
+				if(empty($utm_content)){
+					$utm_content = $utm_content_session;
+				}
+
+				// Si el valor de algun parametro cambia se refrescan en sesion
+				if((!empty($scid) && $scid != $scid_session) || (!empty($gclid) && $gclid != $gclid_session) ){
+					$this->Session->write([
+					  'Campaña.origen' 	=> $origen,
+					  'Campaña.gclid' 	=> $gclid,
+					  'Campaña.scid' 	=> $scid,
+					]);
+
+					$parametros = Hash::normalize($this->request->query, true);
+					$this->Session->write([
+					  'Campaña.parametros' 	=> $parametros
+					]);
+				}
+			}
+		
+			// END captura de origen
+			if(empty($this->request->params['admin'])){
+				$breadcrumbs	= BreadcrumbComponent::get();
+				if ( ! empty($breadcrumbs) && count($breadcrumbs) > 2 )
+				{
+					$this->set(compact('breadcrumbs'));
+				}
+				
+				$this->set(compact('utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content','gclid','scid','origen'));
+			}else{
+				$this->set(compact('utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content','gclid','scid','origen'));
+			}
 		}
 	}
 

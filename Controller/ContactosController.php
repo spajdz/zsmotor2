@@ -6,14 +6,6 @@ class ContactosController extends AppController
 	{
 		if ( $this->request->is('post') )
 		{
-			if ( $this->Auth->user() )
-			{
-				$this->request->data		= array_replace_recursive($this->request->data, array(
-					'Contacto'		=> array(
-						'usuario_id'		=> $this->Auth->user('id')
-					)
-				));
-			}
 			$this->Contacto->create();
 			if ( $this->Contacto->save($this->request->data) )
 			{
@@ -25,8 +17,6 @@ class ContactosController extends AppController
 				$this->Session->setFlash('Error al enviar tu mensaje. Por favor intenta nuevamente.', null, array(), 'danger');
 			}
 		}
-
-		$regiones			= $this->Contacto->Comuna->Region->find('list');
 
 		/**
 		 * Datos de usuario logeado
@@ -43,6 +33,109 @@ class ContactosController extends AppController
 		$this->set('title', 'Contáctanos ahora');
 
 		$this->set(compact('regiones', 'usuario'));
+	}
+
+	public function index()
+	{
+		if($this->request->is('post')){
+			if ($this->Contacto->validates()) {
+
+				$redirect = '';
+				if(!empty($this->request->data['Contacto']['redirect'])){
+					$redirect = $this->request->data['Contacto']['redirect'];
+					unset($this->request->data['Contacto']['redirect']);
+				}
+
+				if(!empty($this->request->data['Contacto']['mayoristas'])){
+					$this->request->data['Contacto']['mensaje'] = 'Solicitud Ingreso Mayoristas: '.$this->request->data['Contacto']['mensaje'];
+				}
+
+				if(!empty($this->request->data['Contacto']['servicios'])){
+	                $servicio = $this->Servicio->find('first',array(
+	                    'fields' => array('titulo', 'slug'),
+	                    'conditions' => array(
+	                        'Servicio.id' => $this->request->data['Contacto']['servicios']
+	                        )
+	                    )
+	                );
+
+	                $servicioNombre = $servicioRes['Servicio']['titulo'];
+
+					$this->request->data['Contacto']['mensaje'] = 'Solicitud de Servicio ('.$servicioNombre.')<br><br><STRONG>Mensaje usuario</STRONG>:'.$this->request->data['Contacto']['mensaje'];
+				}
+
+				if(!empty($this->request->data['Contacto']['tipo_contacto'])){
+					$this->request->data['Contacto']['tipo_contacto_id'] = $this->request->data['Contacto']['tipo_contacto'];
+					unset($this->request->data['Contacto']['tipo_contacto']);
+				}
+
+				//NOTA: EL ARREGLO DE DATOS FINAL A ENVIAR SE HACE EN EL MODEL::BEFORESAVE
+				$this->Contacto->create();
+				if ( $this->Contacto->save($this->request->data) )
+				{
+
+					// ENVIAR A SISTEMA DE LANDING
+					$formularioId = '';
+					$campos = array();
+					if(!empty($this->request->data['Contacto']['formulario']) && $this->request->data['Contacto']['formulario'] == 'contactanos' ){
+						$formularioId = 'ZSMOTORS-CONTACTO';
+
+						$campos['nombre'] 		= $this->request->data['Contacto']['nombre'];
+						$campos['email'] 		= $this->request->data['Contacto']['email'];
+						$campos['telefono'] 	= $this->request->data['Contacto']['telefono'];
+						$campos['comentario'] 	= $this->request->data['Contacto']['mensaje'];
+						$campos['origen'] 		= $this->request->data['Contacto']['origen'];
+						$campos['utm_source'] 	= $this->request->data['Contacto']['utm_source'];
+						$campos['utm_medium'] 	= $this->request->data['Contacto']['utm_medium'];
+						$campos['utm_campaign']	= $this->request->data['Contacto']['utm_campaign'];
+						$campos['utm_term'] 	= $this->request->data['Contacto']['utm_term'];
+						$campos['utm_content'] 	= $this->request->data['Contacto']['utm_content'];
+						$campos['scid'] 		= $this->request->data['Contacto']['scid'];
+						$campos['gclid'] 		= $this->request->data['Contacto']['gclid'];
+					}
+
+					// if(!empty($formularioId)){
+					// 	$endpoint		= curl_init();
+					// 	curl_setopt_array($endpoint, array(
+					// 		CURLOPT_URL					=> 'http://landings.reach-latam.com/api/1.0/leads.json',
+					// 		CURLOPT_POST				=> true,
+					// 		CURLOPT_POSTFIELDS			=> urldecode(http_build_query(array(
+					// 			'_method'					=> 'POST',
+					// 			'Cliente'		=> array(
+					// 				'identificador'		=> 'ZSMOTORS-CL',
+					// 				'clave'				=> urlencode('P&F<y`BsP9+[-VJ:;Z')
+					// 			),
+					// 			'Formulario'	=> array(
+					// 				'identificador'		=> $formularioId
+					// 			),
+					// 			'Campo'			=> $campos,
+					// 		))),
+					// 		CURLOPT_RETURNTRANSFER		=> true,
+					// 		CURLOPT_VERBOSE				=> true,
+					// 		CURLINFO_HEADER_OUT			=> true,
+					// 		CURLOPT_TIMEOUT				=> 2000
+					// 	));
+					// 	$resultado		= curl_exec($endpoint);
+					// 	$err			= curl_errno($endpoint);
+					// 	curl_close($endpoint);
+					
+					// }
+
+					$this->redirect(array('controller' => $redirect));
+				}
+				else
+				{
+					$this->Session->setFlash('Error al enviar los registros. Por favor intenta nuevamente.', null, array(), 'danger');
+					$this->redirect(array('controller' => $redirect, 'action' => $redirectAction, $redirectParam));
+				}
+
+
+			}else{
+				$this->Session->setFlash('Error al enviar los registros. Por favor intenta nuevamente.', null, array(), 'danger');
+				$this->redirect(array('controller' => $redirect, 'action' => $redirectAction));
+			}
+
+		}
 	}
 
 	public function admin_index()

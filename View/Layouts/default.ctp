@@ -14,7 +14,9 @@
 		<?= $this->Html->css(array(
 			'base-css',
 			//'nprogress', 'bootstrap.min', 'font-awesome.min', 'animate',
-			'sitio', 'sitio-especial', 'movil', 'custom'
+			'sitio', 
+			'sitio-especial', 'movil', 'custom'
+			// , 'zsmotor'
 		)); ?>
 		<?= $this->fetch('css'); ?>
 		<?= $this->Html->scriptBlock(sprintf("var webroot = '%s';", $this->webroot)); ?>

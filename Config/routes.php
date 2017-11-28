@@ -1,5 +1,5 @@
 <?php
-Router::connect('/', array('controller' => 'productos', 'action' => 'index'));
+Router::connect('/', array('controller' => 'productos', 'action' => 'home'));
 
 // RUTAS ZSMOTOR
 Router::connect('/filtros', array('controller' => 'productos', 'action' => 'filtros'));
@@ -16,6 +16,7 @@ foreach ( ['neumaticos', 'accesorios', 'llantas'] as $tipo )
 Router::connect("/neumaticos/*", array('controller' => 'productos', 'action' => 'categorias', 'neumaticos'));
 Router::connect("/llantas/*", array('controller' => 'productos', 'action' => 'categorias', 'llantas'));
 Router::connect('/categoria/*', array('controller' => 'productos', 'action' => 'categoria'));
+Router::connect('/ventas-mayoristas', array('controller' => 'pages', 'action' => 'display', 'ventasmayoristas'));
 
 
 // LO QUE ES DE HOOKIPA
@@ -44,7 +45,7 @@ Router::connect('/fracaso', array('controller' => 'compras', 'action' => 'fracas
 Router::connect('/despacho', array('controller' => 'direcciones', 'action' => 'add'));
 Router::connect('/reservas', array('controller' => 'reservas', 'action' => 'add'));
 Router::connect('/listas', array('controller' => 'listas', 'action' => 'add'));
-Router::connect('/contacto', array('controller' => 'contactos', 'action' => 'add'));
+Router::connect('/contacto', array('controller' => 'contactos', 'action' => 'index'));
 Router::connect('/sucursales', array('controller' => 'sucursales', 'action' => 'index'));
 Router::connect('/sucursal/*', array('controller' => 'sucursales', 'action' => 'view'));
 Router::connect('/novedad/*', array('controller' => 'novedades', 'action' => 'view'));

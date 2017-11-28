@@ -20,8 +20,7 @@
 			(
 				$this->Html->menuActivo(array('controller' => 'marcas')) ||
 				$this->Html->menuActivo(array('controller' => 'compras', 'action' => 'index')) ||
-				$this->Html->menuActivo(array('controller' => 'productos')) ||
-				$this->Html->menuActivo(array('controller' => 'productoResenas')) 
+				$this->Html->menuActivo(array('controller' => 'productos')) 
 			)
 			? 'active' : ''
 		); ?>">
@@ -48,13 +47,6 @@
 						array('escape' => false)
 					); ?>
 				</li>
-				<li class="<?= ($this->Html->menuActivo(array('controller' => 'productoResenas')) ? 'active' : ''); ?>">
-					<?= $this->Html->link(
-						'<span class="glyphicon glyphicon-barcode"></span> <span class="xn-text">Productos Reseñas</span>',
-						array('controller' => 'querys', 'action' => 'index'),
-						array('escape' => false)
-					); ?>
-				</li>
 			</ul>
 		</li>
 		<li class="xn-openable <?= (
@@ -72,49 +64,49 @@
 			<ul>
 				<li class="<?= ($this->Html->menuActivo(array('controller' => 'clientes')) ? 'active' : ''); ?>">
 					<?= $this->Html->link(
-						'<span class="glyphicon glyphicon-tags"></span> <span class="xn-text">Clientes</span>',
+						'<span class="glyphicon glyphicon-piggy-bank"></span> <span class="xn-text">Clientes</span>',
 						array('controller' => 'clientes', 'action' => 'index'),
 						array('escape' => false)
 					); ?>
 				</li>
 				<li class="<?= ($this->Html->menuActivo(array('controller' => 'noticias', 'action' => 'index')) ? 'active' : ''); ?>">
 					<?= $this->Html->link(
-						'<span class="glyphicon glyphicon-barcode"></span> <span class="xn-text">Noticias</span>',
+						'<span class="glyphicon glyphicon-picture"></span> <span class="xn-text">Noticias</span>',
 						array('controller' => 'noticias', 'action' => 'index'),
 						array('escape' => false)
 					); ?>
 				</li>
 				<li class="<?= ($this->Html->menuActivo(array('controller' => 'servicios')) ? 'active' : ''); ?>">
 					<?= $this->Html->link(
-						'<span class="glyphicon glyphicon-barcode"></span> <span class="xn-text">Servicios</span>',
+						'<span class="glyphicon glyphicon-cutlery"></span> <span class="xn-text">Servicios</span>',
 						array('controller' => 'servicios', 'action' => 'index'),
 						array('escape' => false)
 					); ?>
 				</li>
 				<li class="<?= ($this->Html->menuActivo(array('controller' => 'sucursales')) ? 'active' : ''); ?>">
 					<?= $this->Html->link(
-						'<span class="glyphicon glyphicon-barcode"></span> <span class="xn-text">Sucursales</span>',
+						'<span class="glyphicon glyphicon-pushpin"></span> <span class="xn-text">Sucursales</span>',
 						array('controller' => 'sucursales', 'action' => 'index'),
 						array('escape' => false)
 					); ?>
 				</li>
 				<li class="<?= ($this->Html->menuActivo(array('controller' => 'encargado_sucursales')) ? 'active' : ''); ?>">
 					<?= $this->Html->link(
-						'<span class="glyphicon glyphicon-barcode"></span> <span class="xn-text">Encargados</span>',
+						'<span class="fa fa-user"></span> <span class="xn-text">Encargados</span>',
 						array('controller' => 'encargado_sucursales', 'action' => 'index'),
 						array('escape' => false)
 					); ?>
 				</li>
 				<li class="<?= ($this->Html->menuActivo(array('controller' => 'categorias')) ? 'active' : ''); ?>">
 					<?= $this->Html->link(
-						'<span class="glyphicon glyphicon-barcode"></span> <span class="xn-text">Menú accesorios categorías</span>',
+						'<span class="fa fa-th-list"></span> <span class="xn-text">Menú accesorios categorías</span>',
 						array('controller' => 'categorias', 'action' => 'index'),
 						array('escape' => false)
 					); ?>
 				</li>
 				<li class="<?= ($this->Html->menuActivo(array('controller' => 'configuraciones')) ? 'active' : ''); ?>">
 					<?= $this->Html->link(
-						'<span class="glyphicon glyphicon-barcode"></span> <span class="xn-text">Configuraciones</span>',
+						'<span class="fa fa-cog xn-title"></span> <span class="xn-text">Configuraciones</span>',
 						array('controller' => 'configuraciones', 'action' => 'index'),
 						array('escape' => false)
 					); ?>
@@ -123,47 +115,16 @@
 		</li>
 		<li class="xn-openable <?= (
 				(
-					$this->Html->menuActivo(array('controller' => 'vehiculo_especificaciones')) ||
-					$this->Html->menuActivo(array('controller' => 'vehiculo_versiones')) ||
-					$this->Html->menuActivo(array('controller' => 'vehiculo_marcas')) ||
-					$this->Html->menuActivo(array('controller' => 'vehiculo_modelos')) 
+					$this->Html->menuActivo(array('controller' => 'vehiculo'))
 				)
 				? 'active' : ''
 			); ?>">
-			<a href="#"><span class="fa fa-th-list"></span> <span class="xn-text">Vehículos</span></a>
+			<a href="#"><span class="fa fa-car"></span> <span class="xn-text">Vehículos</span></a>
 			<ul>
-				<li class="<?= ($this->Html->menuActivo(array('controller' => 'vehiculos_especificaciones' , 'action' => 'masiva')) ? 'active' : ''); ?>">
+				<li class="<?= ($this->Html->menuActivo(array('controller' => 'vehiculos' , 'action' => 'carga_masiva')) ? 'active' : ''); ?>">
 					<?= $this->Html->link(
 						'<span class="glyphicon glyphicon-tags"></span> <span class="xn-text">Vehiculos carga masiva</span>',
-						array('controller' => 'vehiculos_especificaciones', 'action' => 'masiva'),
-						array('escape' => false)
-					); ?>
-				</li>
-				<li class="<?= ($this->Html->menuActivo(array('controller' => 'vehiculos_especificaciones', 'action' => 'index')) ? 'active' : ''); ?>">
-					<?= $this->Html->link(
-						'<span class="glyphicon glyphicon-barcode"></span> <span class="xn-text">Vehículo especificaciones</span>',
-						array('controller' => 'vehiculos_especificaciones', 'action' => 'index'),
-						array('escape' => false)
-					); ?>
-				</li>
-				<li class="<?= ($this->Html->menuActivo(array('controller' => 'vehiculo_versiones')) ? 'active' : ''); ?>">
-					<?= $this->Html->link(
-						'<span class="glyphicon glyphicon-barcode"></span> <span class="xn-text">Vehículo versiones</span>',
-						array('controller' => 'vehiculo_versiones', 'action' => 'index'),
-						array('escape' => false)
-					); ?>
-				</li>
-				<li class="<?= ($this->Html->menuActivo(array('controller' => 'vehiculo_marcas')) ? 'active' : ''); ?>">
-					<?= $this->Html->link(
-						'<span class="glyphicon glyphicon-barcode"></span> <span class="xn-text">Vehículo marcas</span>',
-						array('controller' => 'vehiculo_marcas', 'action' => 'index'),
-						array('escape' => false)
-					); ?>
-				</li>
-				<li class="<?= ($this->Html->menuActivo(array('controller' => 'vehiculo_modelos')) ? 'active' : ''); ?>">
-					<?= $this->Html->link(
-						'<span class="glyphicon glyphicon-barcode"></span> <span class="xn-text">Vehículo modelos</span>',
-						array('controller' => 'vehiculo_modelos', 'action' => 'index'),
+						array('controller' => 'vehiculos', 'action' => 'carga_masiva'),
 						array('escape' => false)
 					); ?>
 				</li>
@@ -177,25 +138,25 @@
 				)
 				? 'active' : ''
 			); ?>">
-			<a href="#"><span class="fa fa-th-list"></span> <span class="xn-text">Usuarios</span></a>
+			<a href="#"><span class="fa fa-user"></span> <span class="xn-text">Usuarios</span></a>
 			<ul>
 				<li class="<?= ($this->Html->menuActivo(array('controller' => 'usuarios')) ? 'active' : ''); ?>">
 					<?= $this->Html->link(
-						'<span class="glyphicon glyphicon-tags"></span> <span class="xn-text">Usuarios</span>',
+						'<span class="fa fa-user"></span> <span class="xn-text">Usuarios</span>',
 						array('controller' => 'usuarios', 'action' => 'index'),
 						array('escape' => false)
 					); ?>
 				</li>
 				<li class="<?= ($this->Html->menuActivo(array('controller' => 'direcciones', 'action' => 'index')) ? 'active' : ''); ?>">
 					<?= $this->Html->link(
-						'<span class="glyphicon glyphicon-barcode"></span> <span class="xn-text">Direcciones</span>',
+						'<span class="glyphicon glyphicon-map-marker"></span> <span class="xn-text">Direcciones</span>',
 						array('controller' => 'direcciones', 'action' => 'index'),
 						array('escape' => false)
 					); ?>
 				</li>
 				<li class="<?= ($this->Html->menuActivo(array('controller' => 'tipo_direcciones')) ? 'active' : ''); ?>">
 					<?= $this->Html->link(
-						'<span class="glyphicon glyphicon-barcode"></span> <span class="xn-text">Tipo direccinoes</span>',
+						'<span class="glyphicon glyphicon-map-marker"></span> <span class="xn-text">Tipo direccinoes</span>',
 						array('controller' => 'tipo_direcciones', 'action' => 'index'),
 						array('escape' => false)
 					); ?>
@@ -209,18 +170,18 @@
 				)
 				? 'active' : ''
 			); ?>">
-			<a href="#"><span class="fa fa-th-list"></span> <span class="xn-text">Imagenes/Banners</span></a>
+			<a href="#"><span class="fa fa-picture-o "></span> <span class="xn-text">Banners</span></a>
 			<ul>
-				<li class="<?= ($this->Html->menuActivo(array('controller' => 'banners')) ? 'active' : ''); ?>">
+				<li class="<?= ($this->Html->menuActivo(array('controller' => 'banners', 'action' => 'index')) ? 'active' : ''); ?>">
 					<?= $this->Html->link(
-						'<span class="glyphicon glyphicon-tags"></span> <span class="xn-text">Imágenes</span>',
-						array('controller' => 'banners'),
+						'<span class="fa fa-picture-o "></span> <span class="xn-text">Banners</span>',
+						array('controller' => 'banners', 'action' => 'index'),
 						array('escape' => false)
 					); ?>
 				</li>
 				<li class="<?= ($this->Html->menuActivo(array('controller' => 'banners', 'action' => 'cuadroshome')) ? 'active' : ''); ?>">
 					<?= $this->Html->link(
-						'<span class="glyphicon glyphicon-barcode"></span> <span class="xn-text">Cuadros categorías home</span>',
+						'<span class="fa fa-picture-o"></span> <span class="xn-text">Cuadros categorías home</span>',
 						array('controller' => 'banners', 'action' => 'cuadroshome'),
 						array('escape' => false)
 					); ?>
@@ -233,12 +194,12 @@
 				)
 				? 'active' : ''
 			); ?>">
-			<a href="#"><span class="fa fa-th-list"></span> <span class="xn-text">Administrador</span></a>
+			<a href="#"><span class="fa fa-user"></span> <span class="xn-text">Administrador</span></a>
 			<ul>
 				<li class="<?= ($this->Html->menuActivo(array('controller' => 'administradores')) ? 'active' : ''); ?>">
 					<?= $this->Html->link(
-						'<span class="glyphicon glyphicon-tags"></span> <span class="xn-text">Administradores</span>',
-						array('controller' => 'administradores', 'action' => 'masiva'),
+						'<span class="fa fa-user"></span> <span class="xn-text">Administradores</span>',
+						array('controller' => 'administradores', 'action' => 'index'),
 						array('escape' => false)
 					); ?>
 				</li>

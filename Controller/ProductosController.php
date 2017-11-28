@@ -2,8 +2,45 @@
 App::uses('AppController', 'Controller');
 class ProductosController extends AppController
 {
-	public $uses = array('Producto', 'Categoria', 'Carga', 'ProductosCarga');
+	public $uses = array('Producto', 'Categoria', 'Carga', 'ProductosCarga','Banner');
 	// ZSMOTOR
+	public function home(){
+		$categoria = 'home';
+		$banners	= $this->Banner->find('all', array(
+			'conditions'		=> array(
+				'Banner.activo' 	=> 1,
+				'Banner.pagina_id' 	=> 1
+			),
+			'order'				=> 'orden',
+			'fields'			=> array(
+				'Banner.id'
+				,'Banner.nombre'
+				,'Banner.imagen'
+				,'Banner.link'
+				,'Banner.enlace_externo'
+				,'Banner.texto'
+			) 	
+		));
+
+		$cuadrosHome = $this->Banner->find('all', array(
+			'conditions'		=> array(
+				'Banner.activo' 	=> 1,
+				'Banner.pagina_id' 	=> 2
+			),
+			'order'				=> 'orden',
+			'fields'			=> array(
+				'Banner.id'
+				,'Banner.nombre'
+				,'Banner.imagen'
+				,'Banner.link'
+				,'Banner.enlace_externo'
+				,'Banner.texto'
+			) 	
+		));
+
+		$this->set(compact('banners', 'categoria', 'cuadrosHome'));
+	}
+
 	public function index($categoria = null){
 		$limite		= ($this->Session->check('Catalogo.Preferencias.limite') ? $this->Session->read('Catalogo.Preferencias.limite') : 10);
 
@@ -149,7 +186,7 @@ class ProductosController extends AppController
 			$this->redirect('/'.$categoria);
 		}
 
-		$limite		= ($this->Session->check('Catalogo.Preferencias.limite') ? $this->Session->read('Catalogo.Preferencias.limite') : 2);
+		$limite		= ($this->Session->check('Catalogo.Preferencias.limite') ? $this->Session->read('Catalogo.Preferencias.limite') : 10);
 
 		if ( isset($this->params->params['named']['limite']) && in_array($this->params->params['named']['limite'], array(2,10,20, 30, 40)) )
 		{
@@ -699,7 +736,7 @@ class ProductosController extends AppController
 
 
 	// HOOKIPA
-	public function home()
+	public function home_hookipa()
 	{
 		$this->Banner        		= ClassRegistry::init('Banner');
 		$this->Configuracion        = ClassRegistry::init('Configuracion');

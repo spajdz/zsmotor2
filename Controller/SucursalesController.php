@@ -2,6 +2,7 @@
 App::uses('AppController', 'Controller');
 class SucursalesController extends AppController
 {
+	public $uses = array('Sucursal','Banner');
 	public function admin_index()
 	{
 		$sucursales = $this->Sucursal->find('all', array(
@@ -97,5 +98,75 @@ class SucursalesController extends AppController
 		$campos			= array_keys($this->Sucursal->_schema);
 		$modelo			= $this->Sucursal->alias;
 		$this->set(compact('datos', 'campos', 'modelo'));
+	}
+
+	public function index(){	
+
+		$banners	= $this->Banner->find('all', array(
+			'conditions'		=> array(
+				'Banner.activo' 	=> 1,
+				'Banner.pagina_id' 	=> 3
+			),
+			'order'				=> 'orden',
+			'fields'			=> array(
+				'Banner.id'
+				,'Banner.nombre'
+				,'Banner.imagen'
+				,'Banner.link'
+				,'Banner.enlace_externo'
+				,'Banner.texto'
+			) 	
+		));
+
+		$miniBanner = $this->Banner->find('first', array(
+			'conditions'		=> array(
+				'Banner.activo' 	=> 1,
+				'Banner.pagina_id' 	=> 4
+			),
+			'order'				=> 'orden',
+			'fields'			=> array(
+				'Banner.id'
+				,'Banner.nombre'
+				,'Banner.imagen'
+				,'Banner.link'
+				,'Banner.enlace_externo'
+				,'Banner.texto'
+			),
+			'limit' => 1 	
+		));
+
+		$sucursales = $this->Sucursal->find('all', array(
+				'conditions' => array(
+					'Sucursal.activo' => 1
+					,'Sucursal.tipo_sucursal_id' => 1
+				),
+				'contain' => array(
+					'Servicio' => array(
+						'fields' => array(
+							'Servicio.nombre',
+							'Servicio.slug'
+						)
+					)
+				)
+			)
+		);
+
+		$distribuidores = $this->Sucursal->find('all', array(
+				'conditions' => array(
+					'Sucursal.activo' => 1
+					,'Sucursal.tipo_sucursal_id' => 2
+				),
+				'contain' => array(
+					'Servicio' => array(
+						'fields' => array(
+							'Servicio.nombre',
+							'Servicio.slug'
+						)
+					)
+				)
+			)
+		);
+
+		$this->set(compact('banners', 'miniBanner', 'sucursales', 'distribuidores'));
 	}
 }

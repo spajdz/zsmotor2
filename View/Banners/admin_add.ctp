@@ -10,16 +10,28 @@
 		<div class="table-responsive">
 			<?= $this->Form->create('Banner', array('class' => 'form-horizontal', 'type' => 'file', 'inputDefaults' => array('label' => false, 'div' => false, 'class' => 'form-control'))); ?>
 				<table class="table">
+					<?if(empty($cuadroshome)):?>
+						<tr>
+							<th><?= $this->Form->label('pagina_id', 'Página'); ?></th>
+							<td>
+								<?= $this->Form->input('pagina_id', array('class' => 'form-control select')); ?>
+							</td>
+						</tr>
+					<?endif;?>
 					<tr>
-						<th><?= $this->Form->label('pagina_id', 'Página'); ?></th>
-						<td>
-							<?= $this->Form->input('pagina_id', array('class' => 'form-control select')); ?>
-						</td>
+						<th><?= $this->Form->label('nombre', 'Nombre'); ?></th>
+						<td><?= $this->Form->input('nombre'); ?></td>
 					</tr>
 					<tr>
-						<th><?= $this->Form->label('nombre', 'Imagen'); ?></th>
-						<td><?= $this->Form->input('nombre', array('type' => 'file', 'class' => '')); ?></td>
+						<th><?= $this->Form->label('imagen', 'Imagen'); ?></th>
+						<td><?= $this->Form->input('imagen', array('type' => 'file', 'class' => '')); ?></td>
 					</tr>
+					<?if(!empty($cuadroshome)):?>
+						<tr>
+							<th><?= $this->Form->label('texto', 'Texto de sección'); ?></th>
+							<td><?= $this->Form->input('texto'); ?></td>
+						</tr>
+					<?endif;?>
 					<tr>
 						<th><?= $this->Form->label('link', 'Link'); ?></th>
 						<td><?= $this->Form->input('link', array( 'required' => false)); ?></td>

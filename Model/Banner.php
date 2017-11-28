@@ -19,37 +19,46 @@ class Banner extends AppModel
 				'imagen'	=> array(
 					'versions'	=> array(
 						array(
-							'prefix'	=> 'banner',
-							'width'		=> 670,
-							'height'	=> 320,
+							'prefix'	=> 'mini',
+							'width'		=> 150,
+							'height'	=> 150,
 							'crop'		=> true
 						),
 						array(
-							'prefix'	=> 'mini',
-							'width'		=> 50,
-							'height'	=> 30,
-							'crop'		=> true
-						)
-					)
-				),
-				'imagen_mobile'	=> array(
-					'versions'	=> array(
-						array(
-							'prefix'	=> 'mobile',
-							'width'		=> 295,
-							'height'	=> 273,
+							'prefix'	=> 'bannerhome',
+							'width'		=> 1350,
+							'height'	=> 529,
 							'crop'		=> true
 						),
 						array(
-							'prefix'	=> 'mini',
-							'width'		=> 50,
-							'height'	=> 30,
+							'prefix'	=> 'bannerinterior',
+							'width'		=> 1350,
+							'height'	=> 350,
+							'crop'		=> true
+						),
+						array(
+							'prefix'	=> 'bannerHorizontalHome',
+							'width'		=> 448,
+							'height'	=> 186,
+							'crop'		=> true
+						),
+						array(
+							'prefix'	=> 'bannerHorizontalHomeInf',
+							'width'		=> 674,
+							'height'	=> 155,
+							'crop'		=> true
+						),
+						array(
+							'prefix'	=> 'bannersucursal',
+							'width'		=> 444,
+							'height'	=> 227,
 							'crop'		=> true
 						)
 					)
 				)
 			)
 		)
+
 	);
 
 	/**
@@ -60,80 +69,19 @@ class Banner extends AppModel
 			'notBlank' => array(
 				'rule'			=> array('notBlank'),
 				'last'			=> true,
-				//'message'		=> 'Mensaje de validación personalizado',
-				//'allowEmpty'	=> true,
-				//'required'		=> false,
-				//'on'			=> 'update', // Solo valida en operaciones de 'create' o 'update'
 			),
 		),
-		'imagen' => array(
-			'notBlank' => array(
-				//'rule'			=> array('notBlank'),
-				//'last'			=> true,
-				//'message'		=> 'Mensaje de validación personalizado',
-				'allowEmpty'		=> false
-				//'required'		=> false,
-				//'on'			=> 'update', // Solo valida en operaciones de 'create' o 'update'
-				),
-			),
-		'imagen_mobile' => array(
-			'notBlank' => array(
-				//'rule'			=> array('notBlank'),
-				//'last'			=> true,
-				//'message'		=> 'Mensaje de validación personalizado',
-				'allowEmpty'		=> false
-				//'required'		=> false,
-				//'on'			=> 'update', // Solo valida en operaciones de 'create' o 'update'
-				),
-			),
-		'fecha_inicio' => array(
-			'datetime' => array(
-				'rule'			=> array('datetime'),
-				'last'			=> true,
-				'allowEmpty'    => true,
-				//'message'		=> 'Mensaje de validación personalizado',
-				//'allowEmpty'	=> true,
-				//'required'		=> false,
-				//'on'			=> 'update', // Solo valida en operaciones de 'create' o 'update'
-			),
-		),
-		'fecha_fin' => array(
-			'datetime' => array(
-				'rule'			=> array('datetime'),
-				'last'			=> true,
-				'allowEmpty'    => true,
-				//'message'		=> 'Mensaje de validación personalizado',
-				//'allowEmpty'	=> true,
-				//'required'		=> false,
-				//'on'			=> 'update', // Solo valida en operaciones de 'create' o 'update'
-			),
-			'checkDate' => array(
-				'rule'            => array('checkDate'),
-				'last'            => true,
-				'message'        => 'La fecha fin debe ser mayor a la fecha inicio.',
-				//'allowEmpty'    => true,
-				//'required'        => false,
-				//'on'            => 'update', // Solo valida en operaciones de 'create' o 'update'
-			)
-		),
+		
 		'activo' => array(
 			'boolean' => array(
 				'rule'			=> array('boolean'),
 				'last'			=> true,
-				//'message'		=> 'Mensaje de validación personalizado',
-				//'allowEmpty'	=> true,
-				//'required'		=> false,
-				//'on'			=> 'update', // Solo valida en operaciones de 'create' o 'update'
 			),
 		),
 		'orden' => array(
 			'numeric' => array(
 				'rule'			=> array('numeric'),
 				'last'			=> true,
-				//'message'		=> 'Mensaje de validación personalizado',
-				//'allowEmpty'	=> true,
-				//'required'		=> false,
-				//'on'			=> 'update', // Solo valida en operaciones de 'create' o 'update'
 			),
 		),
 	);
@@ -191,15 +139,22 @@ class Banner extends AppModel
 		{
 			$this->data[$this->alias]['administrador_id']		= AuthComponent::user('id');
 		}
-
 		/**
 		 * Orden inicial
 		 */
 		if ( ! $this->id && ! isset($this->data[$this->alias][$this->primaryKey]) )
 		{
-			$this->data[$this->alias]['orden']					= $this->find('count') + 1;
+			if($this->data[$this->alias]['pagina_id'] == 2){
+				$this->data[$this->alias]['orden']					= $this->find('count', array('conditions' => array('pagina_id' => 2))) + 1;
+			}else{
+				$this->data[$this->alias]['orden']					= $this->find('count', array('conditions' => array('NOT' => array('pagina_id' => 2)))) + 1;
+			}
 		}
+
+		$this->data[$this->alias]['created']	=  date('Y-m-d H:i:s');
+		$this->data[$this->alias]['modified']	=  date('Y-m-d H:i:s');
 
 		return true;
 	}
+
 }

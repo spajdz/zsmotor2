@@ -3,7 +3,7 @@ App::uses('AppController', 'Controller');
 class PagesController extends AppController
 {
 	public $name = 'Pages';
-	public $uses = array();
+	public $uses = array('Banner');
 
 	public function display()
 	{
@@ -23,8 +23,16 @@ class PagesController extends AppController
 		if ( ! empty($path[$count - 1]) )
 			$title_for_layout = Inflector::humanize($path[$count - 1]);
 
-		BreadcrumbComponent::add('Por qué elegirnos');
-		$this->set('title', 'Por qué elegirnos');
+		if($page == 'ventasmayoristas'){
+			$miniBanner = $this->Banner->find('first', array(
+				'conditions' => array(
+					'Banner.activo' 	=> 1,
+					'Banner.pagina_id' 	=> 5
+				)
+			));
+
+			$this->set(compact('miniBanner'));
+		}
 
 		$this->set(compact('page', 'subpage', 'title_for_layout'));
 		$this->render(implode('/', $path));

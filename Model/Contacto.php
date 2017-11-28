@@ -92,6 +92,24 @@ class Contacto extends AppModel
 	 * ASOCIACIONES
 	 */
 	public $belongsTo = array(
+		'Servicio' => array(
+			'className'				=> 'Servicio',
+			'foreignKey'			=> 'servicio_id',
+			'conditions'			=> '',
+			'fields'				=> '',
+			'order'					=> '',
+			'counterCache'			=> false,
+			'counterScope'			=> array('Asociado.modelo' => 'Usuario')
+		),
+		'TipoContacto' => array(
+			'className'				=> 'TipoContacto',
+			'foreignKey'			=> 'tipo_contacto_id',
+			'conditions'			=> '',
+			'fields'				=> '',
+			'order'					=> '',
+			'counterCache'			=> false,
+			'counterScope'			=> array('Asociado.modelo' => 'TipoContacto')
+		),
 		'Usuario' => array(
 			'className'				=> 'Usuario',
 			'foreignKey'			=> 'usuario_id',
@@ -100,24 +118,6 @@ class Contacto extends AppModel
 			'order'					=> '',
 			'counterCache'			=> false,
 			'counterScope'			=> array('Asociado.modelo' => 'Usuario')
-		),
-		'Comuna' => array(
-			'className'				=> 'Comuna',
-			'foreignKey'			=> 'comuna_id',
-			'conditions'			=> '',
-			'fields'				=> '',
-			'order'					=> '',
-			'counterCache'			=> false,
-			'counterScope'			=> array('Asociado.modelo' => 'Comuna')
-		),
-		'Administrador' => array(
-			'className'				=> 'Administrador',
-			'foreignKey'			=> 'administrador_id',
-			'conditions'			=> '',
-			'fields'				=> '',
-			'order'					=> '',
-			'counterCache'			=> false,
-			'counterScope'			=> array('Asociado.modelo' => 'Administrador')
 		)
 	);
 
@@ -136,11 +136,12 @@ class Contacto extends AppModel
 			$contacto		= $this->find('first', array(
 				'conditions'		=> array('Contacto.id' => $this->data[$this->name]['id']),
 				'contain'			=> array(
-					'Usuario',
-					'Comuna' => array('Region'),
-					'Administrador'
+					'TipoContacto',
+					'Servicio'
 				)
 			));
+
+			// prx($contacto);
 			$evento			= new CakeEvent('Model.Contacto.afterSave', $this, $contacto);
 			$this->getEventManager()->dispatch($evento);
 		}
@@ -214,4 +215,14 @@ class Contacto extends AppModel
 		}
 		return false;
 	}
+
+	public function beforeSave($options = array())
+    {
+        parent::beforeSave($options);
+
+        $this->data[$this->alias]['created']    =  date('Y-m-d H:i:s');
+        $this->data[$this->alias]['modified']   =  date('Y-m-d H:i:s');
+        
+        return true;
+    }
 }
